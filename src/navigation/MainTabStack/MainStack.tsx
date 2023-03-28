@@ -17,6 +17,8 @@ export default function MainStack() {
       screenOptions={{
         tabBarActiveTintColor: colors.active,
         tabBarInactiveTintColor: colors.purple02,
+        unmountOnBlur: true,
+        freezeOnBlur: true,
       }}
       initialRouteName="homeStack">
       <Screen
