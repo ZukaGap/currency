@@ -5,12 +5,19 @@ import HomeStack from './HomeStack';
 import HistoryStack from './HistoryStack';
 import SettingsStack from './SettingsStack';
 
+import {Home, Setting, Swap} from 'assets/SVG';
+import {colors} from '../../styles/colors';
+
 const {Navigator, Screen} = createBottomTabNavigator();
 
 export default function MainStack() {
   return (
     <Navigator
       // tabBar={props => <TabBar {...props} />}
+      screenOptions={{
+        tabBarActiveTintColor: colors.active,
+        tabBarInactiveTintColor: colors.purple02,
+      }}
       initialRouteName="homeStack">
       <Screen
         name="homeStack"
@@ -19,6 +26,7 @@ export default function MainStack() {
           tabBarLabel: 'Home',
           unmountOnBlur: true,
           headerShown: false,
+          tabBarIcon: ({color, size}) => <Home width={size} fill={color} />,
         }}
       />
       <Screen
@@ -28,6 +36,7 @@ export default function MainStack() {
           tabBarLabel: 'History',
           unmountOnBlur: true,
           headerShown: false,
+          tabBarIcon: ({color, size}) => <Swap width={size} fill={color} />,
         }}
       />
       <Screen
@@ -37,6 +46,7 @@ export default function MainStack() {
           tabBarLabel: 'Settings',
           unmountOnBlur: true,
           headerShown: false,
+          tabBarIcon: ({color, size}) => <Setting width={size} fill={color} />,
         }}
       />
     </Navigator>
