@@ -1,4 +1,4 @@
 // with options
 {
-    "plugins": [ ["transform-remove-console", { "exclude": [ "error", "warn", "log"] }], "react-native-reanimated/plugin" ]
+    "plugins": [ ["transform-remove-console", { "exclude": [ "error", "warn", "log"] }], ["module:react-native-dotenv"], "react-native-reanimated/plugin" ]
 }
