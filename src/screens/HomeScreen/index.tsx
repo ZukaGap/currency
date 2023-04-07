@@ -1,9 +1,12 @@
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useCallback} from 'react';
+import {Text, View} from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
+import {FlashList} from '@shopify/flash-list';
 
 import {currenciesAtom} from '../../store/atom/getAtom';
+import {CurrencyBullet, Header} from '../../components';
+import {CurrenciesType} from 'config/Axios/getAPI';
 
 import getStyleObj from './style';
 
@@ -12,15 +15,23 @@ const HomeScreen: React.FC = () => {
   const styles = getStyleObj(insets);
 
   const {data, isLoading, error} = useRecoilValue(currenciesAtom);
-  console.log(data);
-  console.log(isLoading);
-  console.log(error);
+
+  const renderItem = useCallback(
+    ({item, index}: {item: CurrenciesType; index: number}) => {
+      return <CurrencyBullet {...item} />;
+    },
+    [],
+  );
 
   return (
     <SafeAreaView style={styles.safeAreaWrapper}>
-      <View>
-        <Text>Home</Text>
-      </View>
+      <Header />
+      <FlashList
+        data={data}
+        renderItem={renderItem}
+        estimatedItemSize={60}
+        showsVerticalScrollIndicator={false}
+      />
     </SafeAreaView>
   );
 };
