@@ -4,6 +4,7 @@ import {
   REACT_NATIVE_API_ROOT_PROD,
   REACT_NATIVE_API_MODE,
 } from '@env';
+import {format} from 'date-fns';
 
 const API_URL =
   REACT_NATIVE_API_MODE === 'dev'
@@ -12,7 +13,7 @@ const API_URL =
 
 export interface CurrenciesType {
   code: string;
-  quantity: 1;
+  quantity: number;
   rateFormated: string;
   diffFormated: string;
   rate: number;
@@ -22,9 +23,14 @@ export interface CurrenciesType {
   validFromDate: Date;
 }
 
-export const fetchCurrencies = async (): Promise<CurrenciesType[]> => {
+export const fetchCurrencies = async (
+  date?: Date,
+): Promise<CurrenciesType[]> => {
   const response = await axios.get(
-    `${API_URL}/currencies/ka/json/?date=2023-03-30`,
+    `${API_URL}/currencies/ka/json/?date=${format(
+      date || new Date(),
+      'yyyy-MM-dd',
+    )}`,
   );
   return response?.data?.[0]?.currencies;
 };

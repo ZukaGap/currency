@@ -19,7 +19,7 @@ export const currenciesAtom = atom<CurrenciesStateType>({
       const fetchData = async () => {
         setSelf(() => ({data: [], isLoading: true, error: null}));
         try {
-          const response = await fetchCurrencies();
+          const response = await fetchCurrencies(new Date());
           setSelf(() => ({
             data: response,
             isLoading: false,
