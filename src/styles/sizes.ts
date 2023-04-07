@@ -1,0 +1,21 @@
+export const enum sizes {
+  xxs = 2,
+  xs = 4,
+  s = 8,
+  m = 12,
+  l = 14,
+  lx = 16,
+  lxx = 18,
+  h6 = 14,
+  h5 = 16,
+  h4 = 18,
+  h3 = 20,
+  h2 = 22,
+  h1 = 24,
+
+  is = 24,
+  im = 32,
+  il = 36,
+  ilx = 46,
+  ilxx = 56,
+}
