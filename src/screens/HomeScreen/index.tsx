@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import {Text, View} from 'react-native';
+import {ActivityIndicator, Text, View} from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
 import {FlashList} from '@shopify/flash-list';
@@ -9,6 +9,7 @@ import {CurrencyBullet, Header} from '../../components';
 import {CurrenciesType} from 'config/Axios/getAPI';
 
 import getStyleObj from './style';
+import {colors} from 'styles/colors';
 
 const HomeScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -32,6 +33,11 @@ const HomeScreen: React.FC = () => {
         renderItem={renderItem}
         estimatedItemSize={70}
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={() => (
+          <View>
+            <ActivityIndicator size={'large'} color={colors.purple03} />
+          </View>
+        )}
       />
     </SafeAreaView>
   );
