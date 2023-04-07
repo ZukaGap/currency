@@ -1,43 +1,91 @@
-export {default as AED} from './AED.svg';
-export {default as AMD} from './AMD.svg';
-export {default as AUD} from './AUD.svg';
-export {default as AZN} from './AZN.svg';
-export {default as BGN} from './BGN.svg';
-export {default as BRL} from './BRL.svg';
-export {default as BYN} from './BYN.svg';
-export {default as CAD} from './CAD.svg';
-export {default as CHF} from './CHF.svg';
-export {default as CNY} from './CNY.svg';
-export {default as CZK} from './CZK.svg';
-export {default as DKK} from './DKK.svg';
-export {default as EGP} from './EGP.svg';
-export {default as EUR} from './EUR.svg';
-export {default as GBP} from './GBP.svg';
-export {default as HKD} from './HKD.svg';
-export {default as HUF} from './HUF.svg';
-export {default as ILS} from './ILS.svg';
-export {default as INR} from './INR.svg';
-export {default as IRR} from './IRR.svg';
-export {default as ISK} from './ISK.svg';
-export {default as JPY} from './JPY.svg';
-export {default as KGS} from './KGS.svg';
-export {default as KRW} from './KRW.svg';
-export {default as KWD} from './KWD.svg';
-export {default as KZT} from './KZT.svg';
-export {default as MDL} from './MDL.svg';
-export {default as NOK} from './NOK.svg';
-export {default as NZD} from './NZD.svg';
-export {default as PLN} from './PLN.svg';
-export {default as QAR} from './QAR.svg';
-export {default as RON} from './RON.svg';
-export {default as RSD} from './RSD.svg';
-export {default as RUB} from './RUB.svg';
-export {default as SEK} from './SEK.svg';
-export {default as SGD} from './SGD.svg';
-export {default as TJS} from './Dots.svg';
-export {default as TMT} from './TMT.svg';
-export {default as TRY} from './TRY.svg';
-export {default as UAH} from './UAH.svg';
-export {default as USD} from './USD.svg';
-export {default as UZS} from './UZS.svg';
-export {default as ZAR} from './ZAR.svg';
+import {default as AED} from './AED.svg';
+import {default as AMD} from './AMD.svg';
+import {default as AUD} from './AUD.svg';
+import {default as AZN} from './AZN.svg';
+import {default as BGN} from './BGN.svg';
+import {default as BRL} from './BRL.svg';
+import {default as BYN} from './BYN.svg';
+import {default as CAD} from './CAD.svg';
+import {default as CHF} from './CHF.svg';
+import {default as CNY} from './CNY.svg';
+import {default as CZK} from './CZK.svg';
+import {default as DKK} from './DKK.svg';
+import {default as EGP} from './EGP.svg';
+import {default as EUR} from './EUR.svg';
+import {default as GBP} from './GBP.svg';
+import {default as HKD} from './HKD.svg';
+import {default as HUF} from './HUF.svg';
+import {default as ILS} from './ILS.svg';
+import {default as INR} from './INR.svg';
+import {default as IRR} from './IRR.svg';
+import {default as ISK} from './ISK.svg';
+import {default as JPY} from './JPY.svg';
+import {default as KGS} from './KGS.svg';
+import {default as KRW} from './KRW.svg';
+import {default as KWD} from './KWD.svg';
+import {default as KZT} from './KZT.svg';
+import {default as MDL} from './MDL.svg';
+import {default as NOK} from './NOK.svg';
+import {default as NZD} from './NZD.svg';
+import {default as PLN} from './PLN.svg';
+import {default as QAR} from './QAR.svg';
+import {default as RON} from './RON.svg';
+import {default as RSD} from './RSD.svg';
+import {default as RUB} from './RUB.svg';
+import {default as SEK} from './SEK.svg';
+import {default as SGD} from './SGD.svg';
+import {default as TJS} from './TJS.svg';
+import {default as TMT} from './TMT.svg';
+import {default as TRY} from './TRY.svg';
+import {default as UAH} from './UAH.svg';
+import {default as USD} from './USD.svg';
+import {default as UZS} from './UZS.svg';
+import {default as ZAR} from './ZAR.svg';
+
+const Flags = {
+  AED,
+  AMD,
+  AUD,
+  AZN,
+  BGN,
+  BRL,
+  BYN,
+  CAD,
+  CHF,
+  CNY,
+  CZK,
+  DKK,
+  EGP,
+  EUR,
+  GBP,
+  HKD,
+  HUF,
+  ILS,
+  INR,
+  IRR,
+  ISK,
+  JPY,
+  KGS,
+  KRW,
+  KWD,
+  KZT,
+  MDL,
+  NOK,
+  NZD,
+  PLN,
+  QAR,
+  RON,
+  RSD,
+  RUB,
+  SEK,
+  SGD,
+  TJS,
+  TMT,
+  TRY,
+  UAH,
+  USD,
+  UZS,
+  ZAR,
+};
+
+export default Flags;
