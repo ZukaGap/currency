@@ -3,21 +3,9 @@ import {NavigationContainer} from '@react-navigation/native';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import MainStack from './MainTabStack/MainStack';
+import HomeScreen from '../screens/HomeScreen';
 
 const {Navigator, Screen} = createNativeStackNavigator();
-
-// const config = {
-//   animation: 'spring',
-//   config: {
-//     stiffness: 1000,
-//     damping: 500,
-//     mass: 3,
-//     overshootClamping: true,
-//     restDisplacementThreshold: 0.01,
-//     restSpeedThreshold: 0.01,
-//   },
-// };
 
 const Routes: React.FC = () => {
   return (
@@ -29,26 +17,16 @@ const Routes: React.FC = () => {
           headerShown: true,
           headerTransparent: true,
           headerBackTitleVisible: false,
-          headerStyle: {
-            // backgroundColor: colors.white,
-          },
-          // headerTintColor: colors.default,
+          headerStyle: {},
           headerTitleStyle: {
-            // fontFamily: fonts.MetropolisRegular,
             fontSize: 16,
           },
           headerBackButtonMenuEnabled: false,
         })}
-        // options={{
-        //   transitionSpec: {
-        //     open: config,
-        //     close: config,
-        //   },
-        // }}
-        initialRouteName={'mainStack'}>
+        initialRouteName={'homeScreen'}>
         <Screen
-          name="mainStack"
-          component={MainStack}
+          name="homeScreen"
+          component={HomeScreen}
           options={{
             headerShown: false,
           }}
