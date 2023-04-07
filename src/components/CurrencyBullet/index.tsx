@@ -3,6 +3,7 @@ import {Text, View} from 'react-native';
 
 import getStyleObj from './style';
 import {CurrenciesType} from 'config/Axios/getAPI';
+import DynamicFlag from 'components/DynamicFlag';
 
 const CurrencyBullet: React.FC<CurrenciesType> = ({
   name,
@@ -13,10 +14,10 @@ const CurrencyBullet: React.FC<CurrenciesType> = ({
   quantity,
 }) => {
   const styles = getStyleObj();
-  console.log(diff);
 
   return (
     <View style={[styles.bulletContainer, styles.row]}>
+      <DynamicFlag code={code} />
       <View style={[styles.col, {flex: 1}]}>
         <Text numberOfLines={1} style={styles.title}>
           {quantity} {name}
