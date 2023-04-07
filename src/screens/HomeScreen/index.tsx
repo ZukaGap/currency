@@ -26,10 +26,11 @@ const HomeScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.safeAreaWrapper}>
       <Header />
+      <Text style={styles.subTitle}>Today's Rates</Text>
       <FlashList
         data={data}
         renderItem={renderItem}
-        estimatedItemSize={60}
+        estimatedItemSize={70}
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>

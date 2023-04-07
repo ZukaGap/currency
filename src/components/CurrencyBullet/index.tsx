@@ -1,9 +1,10 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 
-import getStyleObj from './style';
 import {CurrenciesType} from 'config/Axios/getAPI';
-import DynamicFlag from 'components/DynamicFlag';
+import {DynamicFlag} from 'primitives';
+
+import getStyleObj from './style';
 
 const CurrencyBullet: React.FC<CurrenciesType> = ({
   name,
