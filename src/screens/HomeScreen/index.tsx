@@ -19,7 +19,7 @@ const HomeScreen: React.FC = () => {
 
   const renderItem = useCallback(
     ({item, index}: {item: CurrenciesType; index: number}) => {
-      return <CurrencyBullet {...item} />;
+      return <CurrencyBullet {...item} onPress={() => {}} />;
     },
     [],
   );

@@ -1,23 +1,27 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
 import {CurrenciesType} from 'config/Axios/getAPI';
 import {DynamicFlag} from 'primitives';
 
 import getStyleObj from './style';
 
-const CurrencyBullet: React.FC<CurrenciesType> = ({
+const CurrencyBullet: React.FC<CurrenciesType & {onPress?: () => void}> = ({
   name,
   code,
   rateFormated,
   diffFormated,
   diff,
   quantity,
+  onPress = () => {},
 }) => {
   const styles = getStyleObj();
 
   return (
-    <View style={[styles.bulletContainer, styles.row]}>
+    <TouchableOpacity
+      activeOpacity={0.75}
+      style={[styles.bulletContainer, styles.row]}
+      onPress={onPress}>
       <DynamicFlag code={code} />
       <View style={[styles.col, {flex: 1}]}>
         <Text numberOfLines={1} style={styles.title}>
@@ -31,7 +35,7 @@ const CurrencyBullet: React.FC<CurrenciesType> = ({
           {diffFormated}
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
