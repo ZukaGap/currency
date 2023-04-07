@@ -7,6 +7,8 @@ module.exports = {
         root: ['./src'],
         alias: {
           '@img': './assets/images',
+          '@svg': './assets/SVG',
+          '@flag': './assets/Flags',
         },
       },
     ],
