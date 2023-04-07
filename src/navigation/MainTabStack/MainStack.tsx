@@ -2,10 +2,10 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import HomeStack from './HomeStack';
-import HistoryStack from './HistoryStack';
-import SettingsStack from './SettingsStack';
+import ConverterStack from './ConverterStack';
+// import SettingsStack from './SettingsStack';
 
-import {Home, Setting, Swap} from 'assets/SVG';
+import {Home, Swap} from 'assets/SVG';
 import {colors} from '../../styles/colors';
 
 const {Navigator, Screen} = createBottomTabNavigator();
@@ -32,16 +32,16 @@ export default function MainStack() {
         }}
       />
       <Screen
-        name="historyStack"
-        component={HistoryStack}
+        name="converterStack"
+        component={ConverterStack}
         options={{
-          tabBarLabel: 'History',
+          tabBarLabel: 'Converter',
           unmountOnBlur: true,
           headerShown: false,
           tabBarIcon: ({color, size}) => <Swap width={size} fill={color} />,
         }}
       />
-      <Screen
+      {/* <Screen
         name="settingsStack"
         component={SettingsStack}
         options={{
@@ -50,7 +50,7 @@ export default function MainStack() {
           headerShown: false,
           tabBarIcon: ({color, size}) => <Setting width={size} fill={color} />,
         }}
-      />
+      /> */}
     </Navigator>
   );
 }

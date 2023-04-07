@@ -1,18 +1,18 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import HistoryScreen from '../../screens/HistoryScreen';
+import ConverterScreen from '../../screens/ConverterScreen';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 
-const HistoryStack: React.FC = () => (
+const ConverterStack: React.FC = () => (
   <Navigator
     screenOptions={{
       headerShown: false,
     }}
-    initialRouteName="historyScreen">
-    <Screen name="historyScreen" component={HistoryScreen} />
+    initialRouteName="converterScreen">
+    <Screen name="converterScreen" component={ConverterScreen} />
   </Navigator>
 );
 
-export default HistoryStack;
+export default ConverterStack;

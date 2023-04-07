@@ -4,7 +4,7 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import getStyleObj from './style';
 
-const SettingsScreen: React.FC = () => {
+const ConverterScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
 
@@ -17,4 +17,4 @@ const SettingsScreen: React.FC = () => {
   );
 };
 
-export default SettingsScreen;
+export default ConverterScreen;
