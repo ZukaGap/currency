@@ -11,3 +11,5 @@ export {default as Setting} from './Setting.svg';
 export {default as Star} from './Star.svg';
 export {default as Swap} from './Swap.svg';
 export {default as Dots} from './Dots.svg';
+export {default as Calculator} from './Calculator.svg';
+export {default as Diagram} from './Diagram.svg';
