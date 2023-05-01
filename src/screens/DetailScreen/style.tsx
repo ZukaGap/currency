@@ -9,7 +9,7 @@ const getStyleObj = (insets: EdgeInsets) => {
     safeAreaWrapper: {
       flex: 1,
       backgroundColor: '#ffffff',
-      // paddingHorizontal: 16,
+      paddingHorizontal: 16,
       ...Platform.select({
         android: {paddingTop: insets.top, paddingBottom: insets.bottom},
         default: {},
@@ -22,12 +22,6 @@ const getStyleObj = (insets: EdgeInsets) => {
       marginLeft: sizes.m,
       marginTop: sizes.lx,
       marginBottom: sizes.s,
-    },
-    header: {
-      paddingTop: insets.top,
-      paddingHorizontal: sizes.m,
-      backgroundColor: 'rgba(255,255,255,0.9)',
-      width: '100%',
     },
   });
 };

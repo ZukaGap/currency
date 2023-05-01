@@ -3,7 +3,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from 'screens/HomeScreen';
+import DetailScreen from 'screens/DetailScreen';
+import CalculatorScreen from 'screens/CalculatorScreen';
+import {colors} from 'styles/colors';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 
@@ -29,6 +32,23 @@ const Routes: React.FC = () => {
           component={HomeScreen}
           options={{
             headerShown: false,
+          }}
+        />
+        <Screen
+          name="detailScreen"
+          component={DetailScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Screen
+          name="calculatorScreen"
+          component={CalculatorScreen}
+          options={{
+            headerShown: true,
+            title: 'Convert',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {color: colors.purple},
           }}
         />
       </Navigator>

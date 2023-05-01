@@ -1,8 +1,12 @@
 import React, {useCallback} from 'react';
-import {ActivityIndicator, Text, View} from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ActivityIndicator, Animated, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
-import {FlashList} from '@shopify/flash-list';
+import {useNavigation} from '@react-navigation/native';
+import {
+  useCollapsibleSubHeader,
+  CollapsibleSubHeaderAnimator,
+} from 'react-navigation-collapsible';
 
 import {currenciesAtom} from '../../store/atom/getAtom';
 import {CurrencyBullet, Header} from '../../components';
@@ -14,24 +18,36 @@ import {colors} from 'styles/colors';
 const HomeScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
+  const {navigate} = useNavigation();
 
-  const {data, isLoading, error} = useRecoilValue(currenciesAtom);
+  const {data} = useRecoilValue(currenciesAtom);
+
+  const {onScroll, containerPaddingTop, scrollIndicatorInsetTop, translateY} =
+    useCollapsibleSubHeader();
 
   const renderItem = useCallback(
-    ({item, index}: {item: CurrenciesType; index: number}) => {
-      return <CurrencyBullet {...item} onPress={() => {}} />;
+    ({item}: {item: CurrenciesType; index: number}) => {
+      return (
+        <CurrencyBullet
+          {...item}
+          onPress={() => {
+            navigate('detailScreen', item);
+          }}
+        />
+      );
     },
-    [],
+    [navigate],
   );
 
   return (
-    <SafeAreaView style={styles.safeAreaWrapper}>
-      <Header />
-      <Text style={styles.subTitle}>Today's Rates</Text>
-      <FlashList
+    <View style={styles.safeAreaWrapper}>
+      <Animated.FlatList
         data={data}
+        onScroll={onScroll}
         renderItem={renderItem}
-        estimatedItemSize={70}
+        style={{paddingHorizontal: 16}}
+        contentContainerStyle={{paddingTop: containerPaddingTop}}
+        scrollIndicatorInsets={{top: scrollIndicatorInsetTop}}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={() => (
           <View>
@@ -39,7 +55,12 @@ const HomeScreen: React.FC = () => {
           </View>
         )}
       />
-    </SafeAreaView>
+      <CollapsibleSubHeaderAnimator translateY={translateY}>
+        <View style={styles.header}>
+          <Header />
+        </View>
+      </CollapsibleSubHeaderAnimator>
+    </View>
   );
 };
 
