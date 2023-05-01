@@ -13,3 +13,5 @@ export {default as Swap} from './Swap.svg';
 export {default as Dots} from './Dots.svg';
 export {default as Calculator} from './Calculator.svg';
 export {default as Diagram} from './Diagram.svg';
+export {default as Back} from './Back.svg';
+export {default as Down} from './Down.svg';
