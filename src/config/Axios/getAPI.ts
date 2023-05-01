@@ -23,6 +23,11 @@ export interface CurrenciesType {
   validFromDate: Date;
 }
 
+export interface CurrencyCodesType {
+  code: string;
+  name: string;
+}
+
 export const fetchCurrencies = async (
   date?: Date,
 ): Promise<CurrenciesType[]> => {
@@ -32,5 +37,10 @@ export const fetchCurrencies = async (
       'yyyy-MM-dd',
     )}`,
   );
+  return response?.data?.[0]?.currencies;
+};
+
+export const fetchCurrencyCodes = async (): Promise<CurrencyCodesType[]> => {
+  const response = await axios.get(`${API_URL}/currencies/codes`);
   return response?.data?.[0]?.currencies;
 };
