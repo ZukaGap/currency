@@ -12,4 +12,5 @@ export const enum colors {
   grey = '#C4C4C4',
   grey00 = '#F2F2F2',
   red = '#a43926',
+  blue = '#007AFF',
 }
