@@ -12,8 +12,14 @@ interface CurrenciesStateType {
   error: string | null;
 }
 
-interface CurrencyCodes {
+interface CurrencyCodesStateType {
   data: CurrencyCodesType[];
+  isLoading: boolean;
+  error: string | null;
+}
+
+interface ConvertCurrencyType {
+  convertedValue: number | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -25,7 +31,7 @@ export const currenciesAtom = atom<CurrenciesStateType>({
     isLoading: false,
     error: null,
   },
-  effects_UNSTABLE: [
+  effects: [
     ({setSelf}) => {
       const fetchData = async () => {
         setSelf(() => ({data: [], isLoading: true, error: null}));
@@ -45,14 +51,14 @@ export const currenciesAtom = atom<CurrenciesStateType>({
   ],
 });
 
-export const currencyCodesAtom = atom<CurrencyCodes>({
+export const currencyCodesAtom = atom<CurrencyCodesStateType>({
   key: 'currencyCodesAtom',
   default: {
     data: [],
     isLoading: false,
     error: null,
   },
-  effects_UNSTABLE: [
+  effects: [
     ({setSelf}) => {
       const fetchData = async () => {
         setSelf(() => ({data: [], isLoading: true, error: null}));
@@ -70,4 +76,20 @@ export const currencyCodesAtom = atom<CurrencyCodes>({
       fetchData();
     },
   ],
+});
+
+export const sendCurrencyAtom = atom<CurrencyCodesType>({
+  key: 'sendCurrency',
+  default: {
+    code: 'GEL',
+    name: 'ლარი',
+  },
+});
+
+export const receiveCurrencyAtom = atom<CurrencyCodesType>({
+  key: 'receiveCurrency',
+  default: {
+    code: 'USD',
+    name: 'აშშ დოლარი',
+  },
 });

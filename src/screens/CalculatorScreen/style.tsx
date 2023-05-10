@@ -3,6 +3,7 @@ import {EdgeInsets} from 'react-native-safe-area-context';
 import {colors} from 'styles/colors';
 import {fonts} from 'styles/fonts';
 import {sizes} from 'styles/sizes';
+import {moderateScale, verticalScale} from 'utils/scalling';
 
 const getStyleObj = (insets: EdgeInsets) => {
   return StyleSheet.create({
@@ -91,6 +92,15 @@ const getStyleObj = (insets: EdgeInsets) => {
       fontSize: sizes.h4,
       fontFamily: fonts.MontserratRegular,
       textAlign: 'right',
+    },
+    sheetButton: {
+      flexDirection: 'row',
+      marginVertical: verticalScale(sizes.xs),
+      padding: moderateScale(sizes.m),
+    },
+    sheetButtonText: {
+      fontSize: moderateScale(sizes.h5),
+      color: colors.black,
     },
   });
 };

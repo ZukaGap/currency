@@ -12,38 +12,62 @@ import {
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Modalize, useModalize} from 'react-native-modalize';
 import {Portal} from 'react-native-portalize';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 import {useNavigation} from '@react-navigation/native';
 
-import {currencyCodesAtom} from 'store/atom/getAtom';
+import {
+  currencyCodesAtom,
+  receiveCurrencyAtom,
+  sendCurrencyAtom,
+} from 'store/atom/getAtom';
+import {CurrencyCodesType, fetchConvertedCurrency} from 'config/Axios/getAPI';
 
 import getStyleObj from './style';
 import {Back, Down, Swap} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
 
+interface RenderItemType {
+  item: CurrencyCodesType;
+  index: number;
+}
+
+interface CurrencyInputType {
+  value: string;
+  step: 'changed' | 'converted';
+}
+
 const CalculatorScreen: React.FC = () => {
   const inputAccessoryViewID = 'uniqueID-keyboardClose#Done';
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
-  const {ref, open} = useModalize();
+  const {ref, open, close} = useModalize();
   const {setOptions, goBack} = useNavigation();
+  const [openedTab, setOpenedTab] = useState('');
 
   const {data} = useRecoilValue(currencyCodesAtom);
 
-  const [sendCurrency, setSendCurrency] = useState({
-    code: 'GEL',
-    name: 'ლარი',
-  });
-  const [receiveCurrency, setReceiveCurrency] = useState({
-    code: 'USD',
-    name: 'აშშ დოლარი',
-  });
+  const [sendCurrency, setSendCurrency] = useRecoilState(sendCurrencyAtom);
+  const [receiveCurrency, setReceiveCurrency] =
+    useRecoilState(receiveCurrencyAtom);
   const rotateValueRef = useRef(new Animated.Value(0)).current;
   const rotate = rotateValueRef.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '180deg'],
   });
+  const [sendValue, setSendValue] = useState<CurrencyInputType>({
+    value: '',
+    step: 'converted',
+  });
+  const [receiveValue, setReceiveValue] = useState<CurrencyInputType>({
+    value: '',
+    step: 'converted',
+  });
+
+  useEffect(() => {
+    setSendValue({value: '', step: 'converted'});
+    setReceiveValue({value: '', step: 'converted'});
+  }, [sendCurrency, receiveCurrency]);
 
   useEffect(() => {
     setOptions({
@@ -72,6 +96,69 @@ const CalculatorScreen: React.FC = () => {
     });
   }, [receiveCurrency, sendCurrency]);
 
+  const renderItem = ({item}: RenderItemType) => (
+    <TouchableOpacity
+      style={styles.sheetButton}
+      onPress={() => handleModalItemPress(item)}>
+      <Text style={styles.sheetButtonText}>{item?.name}</Text>
+    </TouchableOpacity>
+  );
+
+  const handleModalItemPress = useCallback(
+    (value: CurrencyCodesType) => {
+      if (openedTab === 'send') {
+        setSendCurrency(value);
+      } else {
+        setReceiveCurrency(value);
+      }
+      close();
+      setOpenedTab('');
+    },
+    [close, openedTab],
+  );
+
+  const sheetOpenHandle = useCallback(
+    (event: string) => {
+      setOpenedTab(event);
+      open();
+    },
+    [open],
+  );
+
+  useEffect(() => {
+    let handler: ReturnType<typeof setTimeout>;
+
+    if (sendValue?.step === 'changed') {
+      handler = setTimeout(() => {
+        fetchConvertedCurrency(
+          sendCurrency?.code,
+          receiveCurrency?.code,
+          sendValue?.value,
+          value => {
+            setReceiveValue({value, step: 'converted'});
+          },
+        );
+        setSendValue({value: sendValue?.value, step: 'converted'});
+      }, 300);
+    } else if (receiveValue?.step === 'changed') {
+      handler = setTimeout(() => {
+        fetchConvertedCurrency(
+          receiveCurrency?.code,
+          sendCurrency?.code,
+          receiveValue?.value,
+          value => {
+            setSendValue({value, step: 'converted'});
+          },
+        );
+        setReceiveValue({value: receiveValue?.value, step: 'converted'});
+      }, 300);
+    }
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [sendValue, receiveValue]);
+
   return (
     <SafeAreaView style={styles.safeAreaWrapper}>
       <View style={styles.center}>
@@ -83,8 +170,12 @@ const CalculatorScreen: React.FC = () => {
               numberOfLines={1}
               keyboardType={'numeric'}
               inputAccessoryViewID={inputAccessoryViewID}
+              value={sendValue.value}
+              onChangeText={value => setSendValue({value, step: 'changed'})}
             />
-            <TouchableOpacity onPress={() => open()} style={styles.dropDown}>
+            <TouchableOpacity
+              onPress={() => sheetOpenHandle('send')}
+              style={styles.dropDown}>
               <Text style={styles.currencyName} numberOfLines={1}>
                 {sendCurrency.name}
               </Text>
@@ -109,8 +200,12 @@ const CalculatorScreen: React.FC = () => {
               numberOfLines={1}
               keyboardType={'numeric'}
               inputAccessoryViewID={inputAccessoryViewID}
+              value={receiveValue.value}
+              onChangeText={value => setReceiveValue({value, step: 'changed'})}
             />
-            <TouchableOpacity onPress={() => open()} style={styles.dropDown}>
+            <TouchableOpacity
+              onPress={() => sheetOpenHandle('receive')}
+              style={styles.dropDown}>
               <Text style={styles.currencyName} numberOfLines={1}>
                 {receiveCurrency.name}
               </Text>
@@ -127,17 +222,15 @@ const CalculatorScreen: React.FC = () => {
       <Portal>
         <Modalize
           ref={ref}
-          scrollViewProps={{showsVerticalScrollIndicator: false}}
           handlePosition={'outside'}
           disableScrollIfPossible={false}
-          // withOverlay={false}
-          adjustToContentHeight
-          // withHandle={false}
-          withReactModal>
-          <View>
-            <Text>awd</Text>
-          </View>
-        </Modalize>
+          flatListProps={{
+            data: data,
+            renderItem: renderItem,
+            keyExtractor: item => item.heading,
+            showsVerticalScrollIndicator: false,
+          }}
+        />
       </Portal>
     </SafeAreaView>
   );

@@ -42,5 +42,22 @@ export const fetchCurrencies = async (
 
 export const fetchCurrencyCodes = async (): Promise<CurrencyCodesType[]> => {
   const response = await axios.get(`${API_URL}/currencies/codes`);
-  return response?.data?.[0]?.currencies;
+  return response?.data;
+};
+
+export const fetchConvertedCurrency = async (
+  codeFrom: string,
+  codeTo: string,
+  quantity: string,
+  callBack: (value: string) => void,
+): Promise<number> => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/currencies/calculator/?codeFrom=${codeFrom}&codeTo=${codeTo}&quantity=${quantity}`,
+    );
+    callBack(String(response?.data.toFixed(4)));
+    return response?.data;
+  } catch (err) {
+    return 0;
+  }
 };
