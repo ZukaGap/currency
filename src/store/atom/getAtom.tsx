@@ -65,7 +65,7 @@ export const currencyCodesAtom = atom<CurrencyCodesStateType>({
         try {
           const response = await fetchCurrencyCodes();
           setSelf(() => ({
-            data: response,
+            data: [{code: 'GEL', name: 'ლარი'}, ...response],
             isLoading: false,
             error: null,
           }));
