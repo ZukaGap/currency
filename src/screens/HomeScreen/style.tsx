@@ -24,9 +24,11 @@ const getStyleObj = (insets: EdgeInsets) => {
       marginBottom: sizes.s,
     },
     header: {
-      paddingTop: insets.top,
+      // paddingTop: insets.top,
+      paddingVertical: sizes.m,
       paddingHorizontal: sizes.m,
       backgroundColor: 'rgba(255,255,255,0.9)',
+      justifyContent: 'center',
       width: '100%',
     },
   });

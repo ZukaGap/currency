@@ -6,6 +6,7 @@ import {sizes} from 'styles/sizes';
 import {moderateScale, verticalScale} from 'utils/scalling';
 
 const getStyleObj = (insets: EdgeInsets) => {
+  console.log(insets);
   return StyleSheet.create({
     safeAreaWrapper: {
       flex: 1,
@@ -13,7 +14,7 @@ const getStyleObj = (insets: EdgeInsets) => {
       paddingHorizontal: 16,
       ...Platform.select({
         android: {
-          paddingTop: insets.top + sizes.m,
+          paddingTop: sizes.m * 6,
           paddingBottom: insets.bottom,
         },
         ios: {paddingTop: insets.top + sizes.m, paddingBottom: insets.bottom},
