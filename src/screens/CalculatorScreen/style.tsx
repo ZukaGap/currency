@@ -6,7 +6,6 @@ import {sizes} from 'styles/sizes';
 import {moderateScale, verticalScale} from 'utils/scalling';
 
 const getStyleObj = (insets: EdgeInsets) => {
-  console.log(insets);
   return StyleSheet.create({
     safeAreaWrapper: {
       flex: 1,
