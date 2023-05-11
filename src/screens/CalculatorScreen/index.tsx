@@ -4,6 +4,7 @@ import {
   Easing,
   InputAccessoryView,
   Keyboard,
+  Platform,
   Text,
   TextInput,
   TouchableOpacity,
@@ -214,11 +215,13 @@ const CalculatorScreen: React.FC = () => {
           </View>
         </View>
       </View>
-      <InputAccessoryView nativeID={inputAccessoryViewID}>
-        <TouchableOpacity onPress={() => Keyboard.dismiss()}>
-          <Text style={styles.doneBTN}>Done</Text>
-        </TouchableOpacity>
-      </InputAccessoryView>
+      {Platform.OS === 'ios' && (
+        <InputAccessoryView nativeID={inputAccessoryViewID}>
+          <TouchableOpacity onPress={() => Keyboard.dismiss()}>
+            <Text style={styles.doneBTN}>Done</Text>
+          </TouchableOpacity>
+        </InputAccessoryView>
+      )}
       <Portal>
         <Modalize
           ref={ref}
