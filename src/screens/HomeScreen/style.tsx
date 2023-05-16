@@ -1,17 +1,20 @@
-import {Platform, StyleSheet} from 'react-native';
+import {Dimensions, Platform, StyleSheet} from 'react-native';
 import {EdgeInsets} from 'react-native-safe-area-context';
 import {colors} from 'styles/colors';
 import {fonts} from 'styles/fonts';
 import {sizes} from 'styles/sizes';
+
+const {width, height} = Dimensions.get('window');
 
 const getStyleObj = (insets: EdgeInsets) => {
   return StyleSheet.create({
     safeAreaWrapper: {
       flex: 1,
       backgroundColor: '#ffffff',
-      // paddingHorizontal: 16,
+      paddingHorizontal: 16,
       ...Platform.select({
-        android: {paddingTop: insets.top, paddingBottom: insets.bottom},
+        // ios: {paddingTop: insets.top, paddingBottom: insets.bottom},
+        // android: {paddingTop: insets.top, paddingBottom: insets.bottom},
         default: {},
       }),
     },
@@ -24,12 +27,19 @@ const getStyleObj = (insets: EdgeInsets) => {
       marginBottom: sizes.s,
     },
     header: {
-      // paddingTop: insets.top,
-      paddingVertical: sizes.m,
+      ...Platform.select({
+        ios: {
+          paddingTop: insets.top,
+          paddingBottom: sizes.m,
+        },
+        android: {
+          paddingVertical: sizes.m,
+        },
+      }),
       paddingHorizontal: sizes.m,
       backgroundColor: 'rgba(255,255,255,0.9)',
       justifyContent: 'center',
-      width: '100%',
+      width: width,
     },
   });
 };
