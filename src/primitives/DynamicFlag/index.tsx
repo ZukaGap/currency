@@ -1,16 +1,21 @@
 import React from 'react';
 import {View} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 import getStyleObj from './style';
-import Flags from 'assets/Flags';
+import {FlagsPNG} from 'assets/FlagsPNG';
 
 const DynamicFlag: React.FC<{code: string}> = ({code}) => {
   const styles = getStyleObj();
 
-  const DynamicComponent = Flags[code];
+  const dynamicImport = FlagsPNG[code];
 
-  return DynamicComponent ? (
-    <DynamicComponent width={40} height={50} />
+  return dynamicImport ? (
+    <FastImage
+      style={{width: 40, height: 50}}
+      source={dynamicImport}
+      resizeMode={FastImage.resizeMode.contain}
+    />
   ) : (
     <View style={styles.empty} />
   );
