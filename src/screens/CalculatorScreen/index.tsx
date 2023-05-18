@@ -190,7 +190,7 @@ const CalculatorScreen: React.FC = () => {
           onPress={handleSwapCurrency}>
           <View style={[styles.swapFirst]} />
           <Animated.View style={{transform: [{rotate}]}}>
-            <Swap width={sizes.im} height={sizes.im} />
+            <Swap width={sizes.im} height={sizes.im} fill={colors.black} />
           </Animated.View>
         </TouchableOpacity>
         <View style={styles.receive}>
