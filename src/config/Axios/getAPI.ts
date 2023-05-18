@@ -28,6 +28,11 @@ export interface CurrencyCodesType {
   name: string;
 }
 
+export interface CurrencyDetails {
+  date: Date | null;
+  currencies: CurrenciesType[];
+}
+
 export const fetchCurrencies = async (
   date?: Date,
 ): Promise<CurrenciesType[]> => {
@@ -60,4 +65,21 @@ export const fetchConvertedCurrency = async (
   } catch (err) {
     return 0;
   }
+};
+
+export const fetchCurrencyDetails = async (
+  currencies: string[],
+  start: Date,
+  end: Date,
+  callBack: (value: CurrencyDetails[]) => void,
+) => {
+  try {
+    const endTimeParse = format(end, 'yyyy-MM-dd');
+    const startTimeParse = format(start, 'yyyy-MM-dd');
+    const parse = currencies?.join('&currencies=');
+    const response = await axios.get(
+      `${API_URL}/currencies/?currencies=${parse}&start=${startTimeParse}&end=${endTimeParse}`,
+    );
+    callBack(response?.data);
+  } catch (err) {}
 };

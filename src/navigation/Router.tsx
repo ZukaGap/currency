@@ -38,7 +38,10 @@ const Routes: React.FC = () => {
           name="detailScreen"
           component={DetailScreen}
           options={{
-            headerShown: false,
+            headerShown: true,
+            title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {color: colors.purple},
           }}
         />
         <Screen

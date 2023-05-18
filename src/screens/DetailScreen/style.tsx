@@ -12,6 +12,7 @@ const getStyleObj = (insets: EdgeInsets) => {
       paddingHorizontal: 16,
       ...Platform.select({
         android: {paddingTop: insets.top, paddingBottom: insets.bottom},
+        ios: {paddingTop: insets.top, paddingBottom: insets.bottom},
         default: {},
       }),
     },
@@ -22,6 +23,10 @@ const getStyleObj = (insets: EdgeInsets) => {
       marginLeft: sizes.m,
       marginTop: sizes.lx,
       marginBottom: sizes.s,
+    },
+    chartST: {
+      marginVertical: 8,
+      borderRadius: sizes.s,
     },
   });
 };
