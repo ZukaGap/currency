@@ -1,5 +1,11 @@
 import React, {useState, useEffect, useMemo} from 'react';
-import {Dimensions, TouchableOpacity} from 'react-native';
+import {
+  Dimensions,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {LineChart} from 'react-native-chart-kit';
@@ -41,6 +47,13 @@ const DetailScreen: React.FC = () => {
     currencies: [],
   });
   const [loading, setLoading] = useState<boolean>(true);
+  const changeValue = useMemo(
+    () =>
+      `${quantity} ${getSymbolFromCurrency(
+        code,
+      )} - ${rate} ${getSymbolFromCurrency('GEL')}`,
+    [quantity, rate, code],
+  );
 
   const data = useMemo(() => {
     let dataArr = [];
@@ -56,7 +69,7 @@ const DetailScreen: React.FC = () => {
       datasets: [
         {
           data: dataArr,
-          color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+          color: (opacity = 1) => `rgba(223, 213, 235, ${opacity})`, // optional
           strokeWidth: 0, // optional
         },
       ],
@@ -93,27 +106,51 @@ const DetailScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaWrapper}>
-      {!loading && (
-        <LineChart
-          data={data}
-          width={width}
-          height={height}
-          chartConfig={{
-            backgroundColor: colors.purple03,
-            backgroundGradientFrom: colors.purple02,
-            backgroundGradientTo: colors.purple03,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            propsForDots: {
-              r: '0',
-            },
-          }}
-          bezier
-          style={styles.chartST}
-          yAxisLabel={getSymbolFromCurrency(code)}
-          yAxisInterval={1} // optional, defaults to 1
-          onDataPointClick={({value}) => console.log(value)}
-        />
-      )}
+      <ScrollView>
+        <View>
+          <View style={styles.infoCard}>
+            <Text style={styles.label}>სახელი</Text>
+            <Text style={styles.value}>{name}</Text>
+          </View>
+          <View style={styles.infoCard}>
+            <Text style={styles.label}>კურსი</Text>
+            <Text style={styles.value}>{changeValue}</Text>
+          </View>
+          <View style={styles.infoCard}>
+            <Text style={styles.label}>ცვლილება</Text>
+            <Text
+              style={[
+                styles.value,
+                {
+                  color: diff >= 0 ? colors.green : colors.red,
+                },
+              ]}>
+              {diffFormated}
+            </Text>
+          </View>
+          {!loading && (
+            <LineChart
+              data={data}
+              width={width}
+              height={height}
+              chartConfig={{
+                backgroundColor: colors.purple03,
+                backgroundGradientFrom: colors.purple03,
+                backgroundGradientTo: colors.purple03,
+                color: (opacity = 1) => `rgba(239, 234, 245, ${opacity})`,
+                propsForDots: {
+                  r: '0',
+                },
+              }}
+              bezier
+              style={styles.chartST}
+              yAxisLabel={getSymbolFromCurrency(code)}
+              yAxisInterval={1} // optional, defaults to 1
+              onDataPointClick={({value}) => console.log(value)}
+            />
+          )}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

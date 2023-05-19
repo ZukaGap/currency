@@ -31,7 +31,7 @@ const CurrencyBullet: React.FC<CurrenciesType & {onPress?: () => void}> = ({
       </View>
       <View style={[styles.col]}>
         <Text style={styles.title}>{rateFormated}</Text>
-        <Text style={[styles.title, diff <= 0 ? styles.green : styles.red]}>
+        <Text style={[styles.title, diff >= 0 ? styles.green : styles.red]}>
           {diffFormated}
         </Text>
       </View>
