@@ -31,7 +31,9 @@ const HomeScreen: React.FC = () => {
               fill={colors.purple}
             />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.75}>
+          <TouchableOpacity
+            activeOpacity={0.75}
+            onPress={() => navigate('fuelInfoScreen')}>
             <Dots width={sizes.il} height={sizes.il} fill={colors.purple03} />
           </TouchableOpacity>
         </View>
