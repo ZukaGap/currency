@@ -27,6 +27,7 @@ import getStyleObj from './style';
 import {Back, Down, Swap} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
+import getSymbolFromCurrency from 'currency-symbol-map';
 
 interface RenderItemType {
   item: CurrencyCodesType;
@@ -101,7 +102,9 @@ const CalculatorScreen: React.FC = () => {
     <TouchableOpacity
       style={styles.sheetButton}
       onPress={() => handleModalItemPress(item)}>
-      <Text style={styles.sheetButtonText}>{item?.name}</Text>
+      <Text style={styles.sheetButtonText}>
+        {getSymbolFromCurrency(item?.code)} - {item?.name}
+      </Text>
     </TouchableOpacity>
   );
 
