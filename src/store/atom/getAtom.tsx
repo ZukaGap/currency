@@ -4,7 +4,8 @@ import {
   CurrenciesType,
   fetchCurrencyCodes,
   CurrencyCodesType,
-} from '../../config/Axios/getAPI';
+} from 'config/Axios/getAPI';
+import {PortalInfoType} from 'utils/websiteParsers/portalFuel';
 
 interface CurrenciesStateType {
   data: CurrenciesType[];
@@ -91,5 +92,14 @@ export const receiveCurrencyAtom = atom<CurrencyCodesType>({
   default: {
     code: 'USD',
     name: 'აშშ დოლარი',
+  },
+});
+
+export const sendPortalFuelInfoAtom = atom<PortalInfoType>({
+  key: 'sendPortalFuelInfo',
+  default: {
+    company: 'Portal',
+    www: 'https://portal.com.ge/georgian/newfuel',
+    production: [],
   },
 });

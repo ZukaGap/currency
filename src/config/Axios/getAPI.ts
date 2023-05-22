@@ -83,3 +83,11 @@ export const fetchCurrencyDetails = async (
     callBack(response?.data);
   } catch (err) {}
 };
+
+export const fetchPortalFuelInfo = async () => {
+  try {
+    const response = await axios.get('https://portal.com.ge/georgian/newfuel');
+
+    return response.data;
+  } catch (err) {}
+};
