@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import {Text, View} from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useRecoilState} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
 
 import getPortalInfo from 'utils/websiteParsers/portalFuel';
-import {sendPortalFuelInfoAtom} from 'store/atom/getAtom';
+import {sendPortalFuelInfoAtom, wissolFuelInfoAtom} from 'store/atom/getAtom';
 
 import getStyleObj from './style';
 
@@ -12,6 +12,7 @@ const FuelInfoScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
   const [portalInfo, setPortalInfo] = useRecoilState(sendPortalFuelInfoAtom);
+  const {wissolPrices} = useRecoilValue(wissolFuelInfoAtom);
 
   useEffect(() => {
     getPortalFuelInfo();

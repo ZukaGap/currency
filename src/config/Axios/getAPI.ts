@@ -33,6 +33,15 @@ export interface CurrencyDetails {
   currencies: CurrenciesType[];
 }
 
+export interface WissolFuelInfoType {
+  fuel_name: string;
+  fuel_price: string;
+  fuel_type: string;
+  body: string;
+  shortbody: string;
+  fuel_file: string;
+}
+
 export const fetchCurrencies = async (
   date?: Date,
 ): Promise<CurrenciesType[]> => {
@@ -90,4 +99,11 @@ export const fetchPortalFuelInfo = async () => {
 
     return response.data;
   } catch (err) {}
+};
+
+export const fetchWissolFuelInfo = async (): Promise<WissolFuelInfoType[]> => {
+  const response = await axios.get(
+    `http://wissol.ge/adminarea/api/ajaxapi/get_fuel_prices?lang=GEO`,
+  );
+  return response?.data;
 };

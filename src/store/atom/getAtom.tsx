@@ -4,6 +4,8 @@ import {
   CurrenciesType,
   fetchCurrencyCodes,
   CurrencyCodesType,
+  WissolFuelInfoType,
+  fetchWissolFuelInfo,
 } from 'config/Axios/getAPI';
 import {PortalInfoType} from 'utils/websiteParsers/portalFuel';
 
@@ -23,6 +25,12 @@ interface ConvertCurrencyType {
   convertedValue: number | null;
   isLoading: boolean;
   error: string | null;
+}
+
+interface WissolInfoType {
+  wissolPrices: WissolFuelInfoType[];
+  isLoadingWissolInfo: boolean;
+  wissolError: string | null;
 }
 
 export const currenciesAtom = atom<CurrenciesStateType>({
@@ -102,4 +110,40 @@ export const sendPortalFuelInfoAtom = atom<PortalInfoType>({
     www: 'https://portal.com.ge/georgian/newfuel',
     production: [],
   },
+});
+
+export const wissolFuelInfoAtom = atom<WissolInfoType>({
+  key: 'wissolFuelInfoAtom',
+  default: {
+    wissolPrices: [],
+    isLoadingWissolInfo: false,
+    wissolError: null,
+  },
+  effects: [
+    ({setSelf}) => {
+      const fetchData = async () => {
+        setSelf(() => ({
+          wissolPrices: [],
+          isLoadingWissolInfo: true,
+          wissolError: null,
+        }));
+        try {
+          const response = await fetchWissolFuelInfo();
+          console.log('object');
+          setSelf(() => ({
+            wissolPrices: response,
+            isLoadingWissolInfo: false,
+            wissolError: null,
+          }));
+        } catch (error: any) {
+          setSelf(() => ({
+            wissolPrices: [],
+            isLoadingWissolInfo: false,
+            wissolError: error,
+          }));
+        }
+      };
+      fetchData();
+    },
+  ],
 });
