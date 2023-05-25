@@ -4,10 +4,10 @@ import {
   CurrenciesType,
   fetchCurrencyCodes,
   CurrencyCodesType,
-  WissolFuelInfoType,
   fetchWissolFuelInfo,
+  FuelInfoType,
+  fetchSocarFuelInfo,
 } from 'config/Axios/getAPI';
-import {PortalInfoType} from 'utils/websiteParsers/portalFuel';
 
 interface CurrenciesStateType {
   data: CurrenciesType[];
@@ -28,9 +28,15 @@ interface ConvertCurrencyType {
 }
 
 interface WissolInfoType {
-  wissolPrices: WissolFuelInfoType[];
+  wissolPrices: FuelInfoType[];
   isLoadingWissolInfo: boolean;
   wissolError: string | null;
+}
+
+interface SocarInfoType {
+  socarPrices: FuelInfoType[];
+  isLoadingSocarInfo: boolean;
+  socarError: string | null;
 }
 
 export const currenciesAtom = atom<CurrenciesStateType>({
@@ -103,13 +109,9 @@ export const receiveCurrencyAtom = atom<CurrencyCodesType>({
   },
 });
 
-export const sendPortalFuelInfoAtom = atom<PortalInfoType>({
+export const sendPortalFuelInfoAtom = atom<FuelInfoType[]>({
   key: 'sendPortalFuelInfo',
-  default: {
-    company: 'Portal',
-    www: 'https://portal.com.ge/georgian/newfuel',
-    production: [],
-  },
+  default: [],
 });
 
 export const wissolFuelInfoAtom = atom<WissolInfoType>({
@@ -129,7 +131,6 @@ export const wissolFuelInfoAtom = atom<WissolInfoType>({
         }));
         try {
           const response = await fetchWissolFuelInfo();
-          console.log('object');
           setSelf(() => ({
             wissolPrices: response,
             isLoadingWissolInfo: false,
@@ -140,6 +141,41 @@ export const wissolFuelInfoAtom = atom<WissolInfoType>({
             wissolPrices: [],
             isLoadingWissolInfo: false,
             wissolError: error,
+          }));
+        }
+      };
+      fetchData();
+    },
+  ],
+});
+
+export const socarFuelInfoAtom = atom<SocarInfoType>({
+  key: 'socarFuelInfoAtom',
+  default: {
+    socarPrices: [],
+    isLoadingSocarInfo: false,
+    socarError: null,
+  },
+  effects: [
+    ({setSelf}) => {
+      const fetchData = async () => {
+        setSelf(() => ({
+          socarPrices: [],
+          isLoadingSocarInfo: true,
+          socarError: null,
+        }));
+        try {
+          const response = await fetchSocarFuelInfo();
+          setSelf(() => ({
+            socarPrices: response,
+            isLoadingSocarInfo: false,
+            socarError: null,
+          }));
+        } catch (error: any) {
+          setSelf(() => ({
+            socarPrices: [],
+            isLoadingSocarInfo: false,
+            socarError: error,
           }));
         }
       };

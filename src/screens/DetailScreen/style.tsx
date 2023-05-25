@@ -13,8 +13,11 @@ const getStyleObj = (insets: EdgeInsets) => {
       backgroundColor: '#ffffff',
       paddingHorizontal: 16,
       ...Platform.select({
-        android: {paddingTop: insets.top, paddingBottom: insets.bottom},
-        ios: {paddingTop: insets.top, paddingBottom: insets.bottom},
+        android: {
+          paddingTop: sizes.m * 6,
+          paddingBottom: insets.bottom,
+        },
+        ios: {paddingTop: insets.top + sizes.m},
         default: {},
       }),
     },

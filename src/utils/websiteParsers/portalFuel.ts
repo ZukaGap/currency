@@ -1,14 +1,8 @@
 import DOMParser from 'react-native-html-parser';
 
-import {fetchPortalFuelInfo} from 'config/Axios/getAPI';
+import {FuelInfoType, fetchPortalFuelInfo} from 'config/Axios/getAPI';
 
-export interface PortalInfoType {
-  company: 'Portal';
-  www: 'https://portal.com.ge/georgian/newfuel';
-  production: {name: string; price: string}[];
-}
-
-async function getPortalInfo(): Promise<PortalInfoType | {}> {
+async function getPortalInfo(): Promise<FuelInfoType | {}> {
   try {
     const html = await fetchPortalFuelInfo();
     const parser = new DOMParser.DOMParser();
@@ -43,16 +37,15 @@ async function getPortalInfo(): Promise<PortalInfoType | {}> {
         ? fuelCategories?.length
         : fuelPrices?.length;
 
-    const resultOBJ = {
-      company: 'Portal',
-      www: 'https://portal.com.ge/georgian/newfuel',
-      production: [],
-    };
+    const resultOBJ = [];
 
     for (let i = 0; i < length; i++) {
-      resultOBJ.production[i] = {
+      resultOBJ[i] = {
+        id: 'Portal-' + fuelCategories[i],
+        code: '',
         name: fuelCategories[i],
         price: fuelPrices[i],
+        company: 'Portal',
       };
     }
 

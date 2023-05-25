@@ -1,35 +1,111 @@
-import React, {useEffect} from 'react';
-import {Text, View} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {
+  ActivityIndicator,
+  Animated,
+  FlatList,
+  ListRenderItem,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilState, useRecoilValue} from 'recoil';
+import {useNavigation} from '@react-navigation/native';
 
 import getPortalInfo from 'utils/websiteParsers/portalFuel';
-import {sendPortalFuelInfoAtom, wissolFuelInfoAtom} from 'store/atom/getAtom';
+import {
+  sendPortalFuelInfoAtom,
+  socarFuelInfoAtom,
+  wissolFuelInfoAtom,
+} from 'store/atom/getAtom';
 
 import getStyleObj from './style';
+import {Back} from 'assets/SVG';
+import {sizes} from 'styles/sizes';
+import {colors} from 'styles/colors';
+import {FuelPriceBullet} from 'components';
+import {FuelBulletType} from 'components/FuelPriceBullet';
 
 const FuelInfoScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const {goBack, setOptions} = useNavigation();
+  const {height} = useWindowDimensions();
   const styles = getStyleObj(insets);
   const [portalInfo, setPortalInfo] = useRecoilState(sendPortalFuelInfoAtom);
-  const {wissolPrices} = useRecoilValue(wissolFuelInfoAtom);
+  const [isLoadingPortalInfo, setIsLoadingPortalInfo] = useState(false);
+  const {wissolPrices, isLoadingWissolInfo} =
+    useRecoilValue(wissolFuelInfoAtom);
+  const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
+  const listData = useMemo<FuelBulletType[]>(() => {
+    if (!isLoadingSocarInfo && !isLoadingWissolInfo && !isLoadingPortalInfo) {
+      return [...portalInfo, ...wissolPrices, ...socarPrices];
+    } else {
+      return [];
+    }
+  }, [
+    portalInfo,
+    wissolPrices,
+    socarPrices,
+    isLoadingSocarInfo,
+    isLoadingWissolInfo,
+    isLoadingPortalInfo,
+  ]);
 
   useEffect(() => {
     getPortalFuelInfo();
   }, []);
 
   const getPortalFuelInfo = async () => {
-    let res = await getPortalInfo();
-    setPortalInfo(res);
+    try {
+      setIsLoadingPortalInfo(true);
+      let res = await getPortalInfo();
+      setPortalInfo(res);
+      setIsLoadingPortalInfo(false);
+    } catch (err) {}
   };
 
-  console.log(portalInfo);
+  useEffect(() => {
+    setOptions({
+      title: 'საწვავის ფასები',
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            goBack();
+          }}>
+          <Back width={sizes.is} height={sizes.is} fill={colors.purple03} />
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
+  const keyExtractor = useCallback(
+    (item: FuelBulletType) => item?.name + item?.price,
+    [],
+  );
+
+  const renderItem: ListRenderItem<FuelBulletType> = ({item}) => {
+    return <FuelPriceBullet {...item} />;
+  };
+
+  const viewConfig = useRef({viewAreaCoveragePercentThreshold: 50}).current;
 
   return (
     <SafeAreaView style={styles.safeAreaWrapper}>
-      <View>
-        <Text>საწვავის ფასები</Text>
-      </View>
+      <FlatList
+        data={listData}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        style={{height: height}}
+        scrollEventThrottle={16}
+        viewabilityConfig={viewConfig}
+        ListEmptyComponent={() => (
+          <View>
+            <ActivityIndicator size={'large'} color={colors.purple03} />
+          </View>
+        )}
+      />
     </SafeAreaView>
   );
 };

@@ -42,6 +42,14 @@ export interface WissolFuelInfoType {
   fuel_file: string;
 }
 
+export interface FuelInfoType {
+  id: string;
+  code: string;
+  name: string;
+  price: string;
+  company: string;
+}
+
 export const fetchCurrencies = async (
   date?: Date,
 ): Promise<CurrenciesType[]> => {
@@ -101,9 +109,37 @@ export const fetchPortalFuelInfo = async () => {
   } catch (err) {}
 };
 
-export const fetchWissolFuelInfo = async (): Promise<WissolFuelInfoType[]> => {
+export const fetchWissolFuelInfo = async (): Promise<FuelInfoType[]> => {
   const response = await axios.get(
     `http://wissol.ge/adminarea/api/ajaxapi/get_fuel_prices?lang=GEO`,
   );
-  return response?.data;
+  const data: FuelInfoType[] = response?.data?.map(item => {
+    return {
+      id: 'Wissol-' + item?.fuel_name,
+      code: '',
+      name: item?.fuel_name,
+      price: item?.fuel_price,
+      company: 'Wissol',
+    };
+  });
+
+  return data;
+};
+
+export const fetchSocarFuelInfo = async (): Promise<FuelInfoType[]> => {
+  const response = await axios.get(
+    `https://prod-api.sgp.ge/api/v1/fuels/prices`,
+  );
+
+  const data: FuelInfoType[] = response?.data?.data?.map(item => {
+    return {
+      id: item?.id,
+      code: item?.code,
+      name: item?.name,
+      price: item?.price,
+      company: 'Socar',
+    };
+  });
+
+  return data;
 };
