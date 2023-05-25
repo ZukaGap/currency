@@ -48,7 +48,12 @@ const FuelInfoScreen: React.FC = () => {
       !isLoadingPortalInfo &&
       !isLoadingRompetrolInfo
     ) {
-      return [...portalInfo, ...rompetrolInfo, ...wissolPrices, ...socarPrices];
+      return [
+        ...portalInfo,
+        ...rompetrolInfo,
+        ...wissolPrices,
+        ...socarPrices,
+      ]?.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
     } else {
       return [];
     }
