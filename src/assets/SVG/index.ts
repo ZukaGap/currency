@@ -15,3 +15,5 @@ export {default as Calculator} from './Calculator.svg';
 export {default as Diagram} from './Diagram.svg';
 export {default as Back} from './Back.svg';
 export {default as Down} from './Down.svg';
+export {default as PortalLogo} from './PortalLogo.svg';
+export {default as Fuel} from './Fuel.svg';

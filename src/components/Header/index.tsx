@@ -3,7 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import getStyleObj from './style';
-import {Calculator, Diagram, Dots} from 'assets/SVG';
+import {Calculator, Diagram, Fuel} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
 
@@ -34,7 +34,7 @@ const HomeScreen: React.FC = () => {
           <TouchableOpacity
             activeOpacity={0.75}
             onPress={() => navigate('fuelInfoScreen')}>
-            <Dots width={sizes.il} height={sizes.il} fill={colors.purple03} />
+            <Fuel width={sizes.il} height={sizes.im} fill={colors.purple03} />
           </TouchableOpacity>
         </View>
       </View>
