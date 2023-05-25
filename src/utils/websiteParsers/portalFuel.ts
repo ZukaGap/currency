@@ -2,7 +2,7 @@ import DOMParser from 'react-native-html-parser';
 
 import {FuelInfoType, fetchPortalFuelInfo} from 'config/Axios/getAPI';
 
-async function getPortalInfo(): Promise<FuelInfoType | {}> {
+async function getPortalInfo(): Promise<FuelInfoType[] | []> {
   try {
     const html = await fetchPortalFuelInfo();
     const parser = new DOMParser.DOMParser();
@@ -37,7 +37,7 @@ async function getPortalInfo(): Promise<FuelInfoType | {}> {
         ? fuelCategories?.length
         : fuelPrices?.length;
 
-    const resultOBJ = [];
+    const resultOBJ: FuelInfoType[] = [];
 
     for (let i = 0; i < length; i++) {
       resultOBJ[i] = {
@@ -52,7 +52,7 @@ async function getPortalInfo(): Promise<FuelInfoType | {}> {
     return resultOBJ;
   } catch (err) {
     console.log(err);
-    return {};
+    return [];
   }
 }
 

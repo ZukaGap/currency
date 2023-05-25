@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   ActivityIndicator,
-  Animated,
   FlatList,
   ListRenderItem,
   TouchableOpacity,
@@ -15,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import getPortalInfo from 'utils/websiteParsers/portalFuel';
 import {
   sendPortalFuelInfoAtom,
+  sendRompetrolFuelInfoAtom,
   socarFuelInfoAtom,
   wissolFuelInfoAtom,
 } from 'store/atom/getAtom';
@@ -25,6 +25,7 @@ import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
 import {FuelPriceBullet} from 'components';
 import {FuelBulletType} from 'components/FuelPriceBullet';
+import getRompetrolInfo from 'utils/websiteParsers/rompetrolParser';
 
 const FuelInfoScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -32,35 +33,56 @@ const FuelInfoScreen: React.FC = () => {
   const {height} = useWindowDimensions();
   const styles = getStyleObj(insets);
   const [portalInfo, setPortalInfo] = useRecoilState(sendPortalFuelInfoAtom);
+  const [rompetrolInfo, setRompetrolInfo] = useRecoilState(
+    sendRompetrolFuelInfoAtom,
+  );
   const [isLoadingPortalInfo, setIsLoadingPortalInfo] = useState(false);
+  const [isLoadingRompetrolInfo, setIsLoadingRompetrolInfo] = useState(false);
   const {wissolPrices, isLoadingWissolInfo} =
     useRecoilValue(wissolFuelInfoAtom);
   const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
   const listData = useMemo<FuelBulletType[]>(() => {
-    if (!isLoadingSocarInfo && !isLoadingWissolInfo && !isLoadingPortalInfo) {
-      return [...portalInfo, ...wissolPrices, ...socarPrices];
+    if (
+      !isLoadingSocarInfo &&
+      !isLoadingWissolInfo &&
+      !isLoadingPortalInfo &&
+      !isLoadingRompetrolInfo
+    ) {
+      return [...portalInfo, ...rompetrolInfo, ...wissolPrices, ...socarPrices];
     } else {
       return [];
     }
   }, [
-    portalInfo,
-    wissolPrices,
-    socarPrices,
     isLoadingSocarInfo,
     isLoadingWissolInfo,
     isLoadingPortalInfo,
+    isLoadingRompetrolInfo,
+    portalInfo,
+    rompetrolInfo,
+    wissolPrices,
+    socarPrices,
   ]);
 
   useEffect(() => {
     getPortalFuelInfo();
+    getRompetrolFuelInfo();
   }, []);
 
   const getPortalFuelInfo = async () => {
     try {
       setIsLoadingPortalInfo(true);
-      let res = await getPortalInfo();
-      setPortalInfo(res);
+      let respPortal = await getPortalInfo();
+      setPortalInfo(respPortal);
       setIsLoadingPortalInfo(false);
+    } catch (err) {}
+  };
+
+  const getRompetrolFuelInfo = async () => {
+    try {
+      setIsLoadingRompetrolInfo(true);
+      let respRompetrol = await getRompetrolInfo();
+      setRompetrolInfo(respRompetrol);
+      setIsLoadingRompetrolInfo(false);
     } catch (err) {}
   };
 

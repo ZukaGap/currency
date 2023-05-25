@@ -143,3 +143,12 @@ export const fetchSocarFuelInfo = async (): Promise<FuelInfoType[]> => {
 
   return data;
 };
+
+// https://www.rompetrol.ge/#pricelist
+export const fetchRompetrolFuelInfo = async () => {
+  try {
+    const response = await axios.get('https://www.rompetrol.ge/#pricelist');
+
+    return response.data;
+  } catch (err) {}
+};
