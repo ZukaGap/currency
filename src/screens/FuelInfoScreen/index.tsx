@@ -181,12 +181,19 @@ const FuelInfoScreen: React.FC = () => {
     modalizeRef.current?.open();
   }, []);
 
+  const onClose = useCallback(() => {
+    modalizeRef.current?.close();
+  }, []);
+
   const RenderSort = useCallback(() => {
     return filterType?.map(item => {
       return (
         <TouchableOpacity
           activeOpacity={0.75}
-          onPress={() => setSortType(item)}>
+          onPress={() => {
+            setSortType(item);
+            onClose();
+          }}>
           <Text
             style={{
               fontSize: moderateScale(sizes.h4),
