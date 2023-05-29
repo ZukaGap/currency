@@ -236,12 +236,25 @@ const FuelInfoScreen: React.FC = () => {
   );
 
   const ListEmptyComponent = useCallback(
-    () => (
-      <View>
-        <ActivityIndicator size={'large'} color={colors.purple03} />
-      </View>
-    ),
-    [],
+    () =>
+      !isLoadingSocarInfo ||
+      !isLoadingWissolInfo ||
+      !isLoadingPortalInfo ||
+      !isLoadingRompetrolInfo ||
+      !isLoadingGulflInfo ? (
+        <View>
+          <ActivityIndicator size={'large'} color={colors.purple03} />
+        </View>
+      ) : (
+        <View />
+      ),
+    [
+      isLoadingGulflInfo,
+      isLoadingPortalInfo,
+      isLoadingRompetrolInfo,
+      isLoadingSocarInfo,
+      isLoadingWissolInfo,
+    ],
   );
 
   return (
