@@ -16,6 +16,7 @@ import {Modalize} from 'react-native-modalize';
 
 import getPortalInfo from 'utils/websiteParsers/portalFuel';
 import {
+  sendGulfFuelInfoAtom,
   sendPortalFuelInfoAtom,
   sendRompetrolFuelInfoAtom,
   socarFuelInfoAtom,
@@ -31,6 +32,7 @@ import getStyleObj from './style';
 import {Back, Filter} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
+import getGulfInfo from 'utils/websiteParsers/gulfFuelParser';
 
 interface FilterType {
   name: string;
@@ -66,8 +68,10 @@ const FuelInfoScreen: React.FC = () => {
   const [rompetrolInfo, setRompetrolInfo] = useRecoilState(
     sendRompetrolFuelInfoAtom,
   );
+  const [gulfInfo, setGulfInfo] = useRecoilState(sendGulfFuelInfoAtom);
   const [isLoadingPortalInfo, setIsLoadingPortalInfo] = useState(false);
   const [isLoadingRompetrolInfo, setIsLoadingRompetrolInfo] = useState(false);
+  const [isLoadingGulflInfo, setIsLoadingGulfInfo] = useState(false);
   const {wissolPrices, isLoadingWissolInfo} =
     useRecoilValue(wissolFuelInfoAtom);
   const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
@@ -77,7 +81,8 @@ const FuelInfoScreen: React.FC = () => {
       !isLoadingSocarInfo &&
       !isLoadingWissolInfo &&
       !isLoadingPortalInfo &&
-      !isLoadingRompetrolInfo
+      !isLoadingRompetrolInfo &&
+      !isLoadingGulflInfo
     ) {
       if (sortType?.key === 'low-price') {
         return sortToHigh([
@@ -85,6 +90,7 @@ const FuelInfoScreen: React.FC = () => {
           ...socarPrices,
           ...rompetrolInfo,
           ...wissolPrices,
+          ...gulfInfo,
         ]);
       } else if (sortType?.key === 'high-price') {
         return sortToLow([
@@ -92,6 +98,7 @@ const FuelInfoScreen: React.FC = () => {
           ...socarPrices,
           ...rompetrolInfo,
           ...wissolPrices,
+          ...gulfInfo,
         ]);
       } else if (sortType?.key === 'brand-low-price') {
         return [
@@ -99,6 +106,7 @@ const FuelInfoScreen: React.FC = () => {
           ...sortToHigh(socarPrices),
           ...sortToHigh(rompetrolInfo),
           ...sortToHigh(wissolPrices),
+          ...sortToHigh(gulfInfo),
         ];
       } else if (sortType?.key === 'brand-high-price') {
         return [
@@ -106,6 +114,7 @@ const FuelInfoScreen: React.FC = () => {
           ...sortToLow(socarPrices),
           ...sortToLow(rompetrolInfo),
           ...sortToLow(wissolPrices),
+          ...sortToLow(gulfInfo),
         ];
       }
       return [];
@@ -122,11 +131,14 @@ const FuelInfoScreen: React.FC = () => {
     wissolPrices,
     socarPrices,
     sortType,
+    isLoadingGulflInfo,
+    gulfInfo,
   ]);
 
   useEffect(() => {
     getPortalFuelInfo();
     getRompetrolFuelInfo();
+    getGulfFuelInfo();
   }, []);
 
   const getPortalFuelInfo = async () => {
@@ -144,6 +156,15 @@ const FuelInfoScreen: React.FC = () => {
       let respRompetrol = await getRompetrolInfo();
       setRompetrolInfo(respRompetrol);
       setIsLoadingRompetrolInfo(false);
+    } catch (err) {}
+  };
+
+  const getGulfFuelInfo = async () => {
+    try {
+      setIsLoadingGulfInfo(true);
+      let respGulf = await getGulfInfo();
+      setGulfInfo(respGulf);
+      setIsLoadingGulfInfo(false);
     } catch (err) {}
   };
 

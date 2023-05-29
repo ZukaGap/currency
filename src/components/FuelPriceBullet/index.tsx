@@ -22,6 +22,8 @@ const FuelPriceBullet: React.FC<FuelBulletType> = ({name, price, company}) => {
         return require('assets/IMG/SocarLogo.png');
       case 'Rompetrol':
         return require('assets/IMG/RompetrolLogo.png');
+      case 'Gulf':
+        return require('assets/IMG/GulfLogo.png');
 
       default:
         return require('assets/IMG/PortalLogo.png');

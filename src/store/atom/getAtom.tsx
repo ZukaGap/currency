@@ -119,6 +119,11 @@ export const sendRompetrolFuelInfoAtom = atom<FuelInfoType[]>({
   default: [],
 });
 
+export const sendGulfFuelInfoAtom = atom<FuelInfoType[]>({
+  key: 'sendGulfFuelInfoAtom',
+  default: [],
+});
+
 export const wissolFuelInfoAtom = atom<WissolInfoType>({
   key: 'wissolFuelInfoAtom',
   default: {

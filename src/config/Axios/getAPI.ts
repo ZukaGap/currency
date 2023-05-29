@@ -152,3 +152,12 @@ export const fetchRompetrolFuelInfo = async () => {
     return response.data;
   } catch (err) {}
 };
+
+// https://gulf.ge/
+export const fetchGulfFuelInfo = async () => {
+  try {
+    const response = await axios.get('https://gulf.ge/');
+
+    return response.data;
+  } catch (err) {}
+};
