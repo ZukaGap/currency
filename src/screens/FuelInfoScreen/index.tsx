@@ -77,61 +77,46 @@ const FuelInfoScreen: React.FC = () => {
   const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
   const [sortType, setSortType] = useState<FilterType>(filterType[0]);
   const listData = useMemo<FuelBulletType[]>(() => {
-    if (
-      !isLoadingSocarInfo &&
-      !isLoadingWissolInfo &&
-      !isLoadingPortalInfo &&
-      !isLoadingRompetrolInfo &&
-      !isLoadingGulflInfo
-    ) {
-      if (sortType?.key === 'low-price') {
-        return sortToHigh([
-          ...portalInfo,
-          ...socarPrices,
-          ...rompetrolInfo,
-          ...wissolPrices,
-          ...gulfInfo,
-        ]);
-      } else if (sortType?.key === 'high-price') {
-        return sortToLow([
-          ...portalInfo,
-          ...socarPrices,
-          ...rompetrolInfo,
-          ...wissolPrices,
-          ...gulfInfo,
-        ]);
-      } else if (sortType?.key === 'brand-low-price') {
-        return [
-          ...sortToHigh(portalInfo),
-          ...sortToHigh(socarPrices),
-          ...sortToHigh(rompetrolInfo),
-          ...sortToHigh(wissolPrices),
-          ...sortToHigh(gulfInfo),
-        ];
-      } else if (sortType?.key === 'brand-high-price') {
-        return [
-          ...sortToLow(portalInfo),
-          ...sortToLow(socarPrices),
-          ...sortToLow(rompetrolInfo),
-          ...sortToLow(wissolPrices),
-          ...sortToLow(gulfInfo),
-        ];
-      }
-      return [];
-    } else {
-      return [];
+    if (sortType?.key === 'low-price') {
+      return sortToHigh([
+        ...portalInfo,
+        ...socarPrices,
+        ...rompetrolInfo,
+        ...wissolPrices,
+        ...gulfInfo,
+      ]);
+    } else if (sortType?.key === 'high-price') {
+      return sortToLow([
+        ...portalInfo,
+        ...socarPrices,
+        ...rompetrolInfo,
+        ...wissolPrices,
+        ...gulfInfo,
+      ]);
+    } else if (sortType?.key === 'brand-low-price') {
+      return [
+        ...sortToHigh(portalInfo),
+        ...sortToHigh(socarPrices),
+        ...sortToHigh(rompetrolInfo),
+        ...sortToHigh(wissolPrices),
+        ...sortToHigh(gulfInfo),
+      ];
+    } else if (sortType?.key === 'brand-high-price') {
+      return [
+        ...sortToLow(portalInfo),
+        ...sortToLow(socarPrices),
+        ...sortToLow(rompetrolInfo),
+        ...sortToLow(wissolPrices),
+        ...sortToLow(gulfInfo),
+      ];
     }
+    return [];
   }, [
-    isLoadingSocarInfo,
-    isLoadingWissolInfo,
-    isLoadingPortalInfo,
-    isLoadingRompetrolInfo,
     portalInfo,
     rompetrolInfo,
     wissolPrices,
     socarPrices,
     sortType,
-    isLoadingGulflInfo,
     gulfInfo,
   ]);
 
@@ -228,6 +213,37 @@ const FuelInfoScreen: React.FC = () => {
     });
   }, [sortType]);
 
+  const ListHeaderComponent = useCallback(
+    () =>
+      isLoadingSocarInfo ||
+      isLoadingWissolInfo ||
+      isLoadingPortalInfo ||
+      isLoadingRompetrolInfo ||
+      isLoadingGulflInfo ? (
+        <View style={{marginBottom: sizes.s}}>
+          <ActivityIndicator size={'large'} color={colors.purple03} />
+        </View>
+      ) : (
+        <View />
+      ),
+    [
+      isLoadingGulflInfo,
+      isLoadingPortalInfo,
+      isLoadingRompetrolInfo,
+      isLoadingSocarInfo,
+      isLoadingWissolInfo,
+    ],
+  );
+
+  const ListEmptyComponent = useCallback(
+    () => (
+      <View>
+        <ActivityIndicator size={'large'} color={colors.purple03} />
+      </View>
+    ),
+    [],
+  );
+
   return (
     <SafeAreaView style={styles.safeAreaWrapper}>
       <FlatList
@@ -239,11 +255,8 @@ const FuelInfoScreen: React.FC = () => {
         style={{height: height}}
         scrollEventThrottle={16}
         viewabilityConfig={viewConfig}
-        ListEmptyComponent={() => (
-          <View>
-            <ActivityIndicator size={'large'} color={colors.purple03} />
-          </View>
-        )}
+        ListHeaderComponent={ListHeaderComponent}
+        ListEmptyComponent={ListEmptyComponent}
       />
 
       <Portal>
