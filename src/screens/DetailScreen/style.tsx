@@ -1,6 +1,7 @@
 import {Platform, StyleSheet} from 'react-native';
 import {EdgeInsets} from 'react-native-safe-area-context';
 import {horizontalScale, moderateScale, verticalScale} from 'utils/scalling';
+import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 
 import {colors} from 'styles/colors';
 import {fonts} from 'styles/fonts';
@@ -10,7 +11,7 @@ const getStyleObj = (insets: EdgeInsets) => {
   return StyleSheet.create({
     safeAreaWrapper: {
       flex: 1,
-      backgroundColor: '#ffffff',
+      backgroundColor: colors.purple01,
       paddingHorizontal: 16,
       ...Platform.select({
         android: {
@@ -43,6 +44,28 @@ const getStyleObj = (insets: EdgeInsets) => {
       fontSize: moderateScale(sizes.h6),
       color: colors.purple00,
       marginTop: verticalScale(sizes.xs),
+    },
+    rate: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    rateValue: {
+      fontFamily: fonts.MontserratRegular,
+      fontSize: moderateScale(sizes.il),
+      color: colors.white,
+    },
+    rateDifference: {
+      fontFamily: fonts.MontserratRegular,
+      fontSize: moderateScale(sizes.is),
+      color: colors.purple03,
+    },
+    graph: {
+      alignSelf: 'center',
+      width: '100%',
+      aspectRatio: 1.4,
+      marginVertical: 20,
+      transform: [{scaleX: -1}],
     },
   });
 };

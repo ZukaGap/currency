@@ -317,6 +317,8 @@ PODS:
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
+  - react-native-segmented-control (2.4.1):
+    - React-Core
   - react-native-skia (0.1.185):
     - React
     - React-callinvoker
@@ -397,7 +399,7 @@ PODS:
     - React-Core
   - RNGestureHandler (2.9.0):
     - React-Core
-  - RNReanimated (3.0.2):
+  - RNReanimated (3.1.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -427,6 +429,8 @@ PODS:
   - RNScreens (3.20.0):
     - React-Core
     - React-RCTImage
+  - RNStaticSafeAreaInsets (2.2.0):
+    - React-Core
   - RNSVG (13.6.0):
     - React-Core
   - SDWebImage (5.11.1):
@@ -488,6 +492,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-segmented-control (from `../node_modules/@react-native-segmented-control/segmented-control`)"
   - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -507,6 +512,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNStaticSafeAreaInsets (from `../node_modules/react-native-static-safe-area-insets`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -576,6 +582,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-segmented-control:
+    :path: "../node_modules/@react-native-segmented-control/segmented-control"
   react-native-skia:
     :path: "../node_modules/@shopify/react-native-skia"
   React-perflogger:
@@ -614,6 +622,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNStaticSafeAreaInsets:
+    :path: "../node_modules/react-native-static-safe-area-insets"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   Yoga:
@@ -656,6 +666,7 @@ SPEC CHECKSUMS:
   React-jsinspector: bd839d6c2c28e49fe1373f055735d2abecbd6cf3
   React-logger: 48d82b9be8e44d86668de4453fdb60255516388b
   react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
+  react-native-segmented-control: 0e4b5d93911e2234f110057df2b41738b326ab3e
   react-native-skia: 8d65fa55196f437b475563b67b06a744f2ad4a0d
   React-perflogger: 77947e49d84e31eb87d454d4ef327542dcfeaebc
   React-RCTActionSheet: 9f5fd6c1666c1a834ab7f45a452ed08b1de44eb8
@@ -673,8 +684,9 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFlashList: 7fbca4fc075484a9426f1610d648dbea2de94eb0
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
-  RNReanimated: 0a5f87ec1da472cca3e835333fdebe51d983c411
+  RNReanimated: 47df570b2e2b9eba34e78a299dd6d44596ff7bb6
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
+  RNStaticSafeAreaInsets: 055ddbf5e476321720457cdaeec0ff2ba40ec1b8
   RNSVG: 3a79c0c4992213e4f06c08e62730c5e7b9e4dc17
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
