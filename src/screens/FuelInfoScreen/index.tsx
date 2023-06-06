@@ -25,7 +25,11 @@ import {
 import {FuelPriceBullet} from 'components';
 import {FuelBulletType} from 'components/FuelPriceBullet';
 import getRompetrolInfo from 'utils/websiteParsers/rompetrolParser';
-import {horizontalScale, moderateScale, verticalScale} from 'utils/scalling';
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from 'replacers/scalling';
 import {sortToHigh, sortToLow} from 'utils/sort';
 
 import getStyleObj from './style';

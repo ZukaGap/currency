@@ -3,7 +3,7 @@ import {EdgeInsets} from 'react-native-safe-area-context';
 import {colors} from 'styles/colors';
 import {fonts} from 'styles/fonts';
 import {sizes} from 'styles/sizes';
-import {moderateScale, verticalScale} from 'utils/scalling';
+import {moderateScale, verticalScale} from 'replacers/scalling';
 
 const getStyleObj = (insets: EdgeInsets) => {
   return StyleSheet.create({

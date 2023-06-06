@@ -1,6 +1,10 @@
 import {Platform, StyleSheet} from 'react-native';
 import {EdgeInsets} from 'react-native-safe-area-context';
-import {horizontalScale, moderateScale, verticalScale} from 'utils/scalling';
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from 'replacers/scalling';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 
 import {colors} from 'styles/colors';
