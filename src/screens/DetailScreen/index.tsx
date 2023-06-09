@@ -1,73 +1,151 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import getSymbolFromCurrency from 'currency-symbol-map';
-import {max, min, subMonths} from 'date-fns';
-import {GraphPoint, LineGraph, SelectionDot} from 'react-native-graph';
-import {GraphRange} from 'react-native-graph/lib/typescript/LineGraphProps';
-
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {
-  CurrenciesType,
-  CurrencyDetails,
-  fetchCurrencyDetails,
-} from 'config/Axios/getAPI';
+  View,
+  StyleSheet,
+  useWindowDimensions,
+  TouchableOpacity,
+} from 'react-native';
+import {
+  Canvas,
+  Path,
+  Group,
+  LinearGradient,
+  vec,
+} from '@shopify/react-native-skia';
+import Animated, {
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
+import {GestureDetector} from 'react-native-gesture-handler';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import TabSwitchButton, {ButtonData} from 'components/TabSwitchButton';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-import getStyleObj from './style';
-import {colors} from 'styles/colors';
-import {sizes} from 'styles/sizes';
+import {PADDING, COLORS, getGraph, Graph, buildGraph, PriceList} from './Model';
+import {getYForX} from './Math';
+import {Cursor} from './componentsChild/Cursor';
+import {List} from './componentsChild/List';
+import {Header} from './componentsChild/Header';
+import {Label} from './componentsChild/Label';
+import {useGraphTouchHandler} from './componentsChild/useGraphTouchHandler';
+import {CurrenciesType, fetchCurrencyDetails} from 'config/Axios/getAPI';
+
 import {Back} from 'assets/SVG';
+import {sizes} from 'styles/sizes';
+import {colors} from 'styles/colors';
+import getStyleObj from './style';
+import {subMonths} from 'date-fns';
 
-const GRADIENT_FILL_COLORS = ['#7476df5D', '#7476df4D', '#7476df00'];
+const touchableCursorSize = 80;
 
-const DetailScreen: React.FC = () => {
+export const DetailScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
-  const {setOptions, goBack} = useNavigation();
+  const {width, height} = useWindowDimensions();
   const {params} = useRoute();
-  const {
-    code,
-    quantity,
-    rateFormated,
-    diffFormated,
-    rate,
-    name,
-    diff,
-    date,
-    validFromDate,
-  }: CurrenciesType = params || {};
-  const [currencyData, setCurrencyData] = useState<CurrencyDetails[]>({
-    date: null,
-    currencies: [],
+  const {code, rate, name}: CurrenciesType = params || {};
+  const {setOptions, goBack} = useNavigation();
+  const calcHeight = Math.min(width, height) / 2;
+  const translateY = calcHeight + PADDING;
+  const [rangeOfDate, setRangeOfDate] = useState<number>(0);
+  const [indexOfTab, setIndexOfTab] = useState<number>(0);
+  // animation value to transition from one graph to the next
+  const transition = useSharedValue(0);
+  // indicices of the current and next graphs
+  const state = useSharedValue({
+    next: 0,
+    current: 0,
   });
-  const [loading, setLoading] = useState<boolean>(true);
-  const changeValue = useMemo(
-    () =>
-      `${quantity} ${getSymbolFromCurrency(
-        code,
-      )} - ${rate} ${getSymbolFromCurrency('GEL')}`,
-    [quantity, rate, code],
+  const graphsData = useSharedValue<Graph[]>([
+    {
+      label: '1W',
+      value: 0,
+    },
+    {
+      label: '1M',
+      value: 1,
+    },
+    {
+      label: '3M',
+      value: 3,
+    },
+    {
+      label: '6M',
+      value: 6,
+    },
+    {
+      label: '1Y',
+      value: 12,
+    },
+  ]);
+
+  useEffect(() => {
+    getCurrencyInRange();
+  }, [rangeOfDate]);
+
+  const graphs = useMemo(
+    () => getGraph(code, rangeOfDate, width, calcHeight),
+    [code, width, calcHeight, rangeOfDate],
   );
-  const [currencyMaxValue, setCurrencyMaxValue] = useState<number>(0);
-  const [currencyMinValue, setCurrencyMinValue] = useState<number>(0);
+  // path to display
+  const path = useDerivedValue(() => {
+    const {current, next} = state.value;
+    const start = graphs[current].data.path;
+    const end = graphs[next].data.path;
+    return end.interpolate(start, transition.value)!;
+  }, [graphsData]);
+  //   and y values of the cursor
+  const x = useSharedValue(0);
+  const y = useDerivedValue(() => {
+    return getYForX(path.value.toCmds(), x.value);
+  }, [path, x]);
 
-  const points = useMemo<GraphPoint[]>(() => {
-    let dataArr: GraphPoint[] = [];
-
-    if (currencyData?.length) {
-      currencyData?.forEach(item => {
-        dataArr.push({
-          date: new Date(item?.currencies[0].validFromDate),
-          value: item?.currencies[0].rate,
+  const getCurrencyInRange = useCallback(
+    async (index?: number) => {
+      if (graphsData.value[index || indexOfTab].data === undefined) {
+        const response = await fetchCurrencyDetails(
+          [code],
+          subMonths(new Date(), rangeOfDate),
+          new Date(),
+        );
+        const prices: PriceList = response?.map(item => {
+          return [
+            item?.currencies?.[0]?.validFromDate,
+            item?.currencies?.[0]?.rate,
+            item?.currencies?.[0]?.diff,
+          ];
         });
-      });
-    }
-    return dataArr;
-  }, [currencyData]);
+        const renewGraphs = buildGraph(
+          {percent_change: 0, prices: prices},
+          graphsData.value[index || indexOfTab].label,
+          width,
+          height,
+        );
+        graphsData.value[index || indexOfTab] = {
+          ...graphsData.value[index || indexOfTab],
+          data: renewGraphs,
+        };
+      }
+    },
+    [graphsData.value, rangeOfDate, code, width, height, indexOfTab],
+  );
+
+  const gesture = useGraphTouchHandler(x, width - 16);
+  const style = useAnimatedStyle(() => {
+    return {
+      position: 'absolute',
+      width: touchableCursorSize,
+      height: touchableCursorSize,
+      left: x.value - touchableCursorSize / 2,
+      top: translateY + y.value - touchableCursorSize / 2,
+    };
+  });
 
   useEffect(() => {
     setOptions({
-      title: code,
+      title: name,
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => {
@@ -79,96 +157,52 @@ const DetailScreen: React.FC = () => {
     });
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
-
-    fetchCurrencyDetails(
-      [code],
-      subMonths(new Date(), 1),
-      new Date(),
-      response => {
-        setCurrencyData(response);
-        setLoading(false);
-      },
-    );
-  }, [code]);
-
-  const range: GraphRange | undefined = useMemo(() => {
-    let timeArr: Date[] = [];
-    let minValue = points?.[0]?.value;
-    let maxValue = points?.[0]?.value;
-    points?.forEach(item => {
-      timeArr.push(item?.date);
-      if (item?.value < minValue) {
-        minValue = item?.value;
-      }
-      if (item?.value > maxValue) {
-        maxValue = item?.value;
-      }
-    });
-
-    console.log(timeArr);
-
-    if (!timeArr?.length) return undefined;
-
-    setCurrencyMaxValue(maxValue);
-    setCurrencyMinValue(minValue);
-
-    return {
-      x: {
-        min: min(timeArr),
-        max: max(timeArr),
-      },
-      y: {
-        min: minValue,
-        max: maxValue,
-      },
-    };
-  }, [points]);
-
   return (
-    <SafeAreaView style={styles.safeAreaWrapper}>
+    <View style={styles.safeAreaWrapper}>
       <View>
-        <View style={styles.rate}>
-          <Text style={styles.rateValue}>
-            {getSymbolFromCurrency(code)} {rate}
-          </Text>
-          <Text style={styles.rateDifference}>
-            {diff >= 0 ? '+' : '-'} {diffFormated}
-          </Text>
-        </View>
-        <LineGraph
-          points={points}
-          color={colors.purple}
-          style={styles.graph}
-          // gradientFillColors={GRADIENT_FILL_COLORS}
-          enablePanGesture={true}
-          // enableFadeInMask={true}
-          SelectionDot={SelectionDot}
-          // enableIndicator={true}
-          horizontalPadding={sizes.lxx}
-          verticalPadding={sizes.lxx}
-          // indicatorPulsating={true}
-          animated={true}
-          panGestureDelay={300}
-          // onGestureStart={() => hapticFeedback('impactLight')}
-          onPointSelected={p => console.log(p)}
-          // onGestureEnd={() => resetPriceTitle()}
-          // range={range}
-          // TopAxisLabel={() => (
-          //   <View>
-          //     <Text>{currencyMaxValue}</Text>
-          //   </View>
-          // )}
-          // BottomAxisLabel={() => (
-          //   <View>
-          //     <Text>{currencyMinValue}</Text>
-          //   </View>
-          // )}
+        <Canvas style={{width, height: 2 * calcHeight + 30}}>
+          <Label
+            state={state}
+            y={y}
+            graphs={graphs}
+            width={width}
+            height={calcHeight}
+          />
+          <Group transform={[{translateY}]}>
+            <Path
+              style="stroke"
+              path={path}
+              strokeWidth={4}
+              strokeJoin="round"
+              strokeCap="round">
+              <LinearGradient
+                start={vec(0, 0)}
+                end={vec(width, 0)}
+                colors={COLORS}
+              />
+            </Path>
+            <Cursor x={x} y={y} width={width} />
+          </Group>
+        </Canvas>
+        <GestureDetector gesture={gesture}>
+          <Animated.View style={style} />
+        </GestureDetector>
+      </View>
+      <View style={{paddingHorizontal: 16, paddingBottom: 16}}>
+        <TabSwitchButton
+          tabData={graphsData.value}
+          onChange={(item, index) => {
+            state.value = {current: state.value.next, next: index};
+            transition.value = 0;
+            transition.value = withTiming(1, {
+              duration: 750,
+            });
+            setRangeOfDate(item?.value);
+            setIndexOfTab(index);
+          }}
         />
       </View>
-    </SafeAreaView>
+      <List />
+    </View>
   );
 };
-
-export default DetailScreen;

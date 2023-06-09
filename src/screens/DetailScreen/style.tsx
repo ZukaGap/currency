@@ -16,7 +16,7 @@ const getStyleObj = (insets: EdgeInsets) => {
     safeAreaWrapper: {
       flex: 1,
       backgroundColor: colors.purple01,
-      paddingHorizontal: 16,
+      // paddingHorizontal: 16,
       ...Platform.select({
         android: {
           paddingTop: sizes.m * 6,
