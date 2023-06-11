@@ -14,6 +14,15 @@ const getStyleObj = ({}) => {
       borderRadius: moderateScale(sizes.s),
       width: '100%',
       padding: moderateScale(sizes.xs),
+      ...generateBoxShadowStyle(
+        0,
+        2,
+        colors.Purple600,
+        0.17,
+        2.54,
+        3,
+        '#7e3af22B',
+      ),
     },
     activeButton: {
       flex: 1,
