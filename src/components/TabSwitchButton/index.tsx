@@ -44,7 +44,7 @@ const TabSwitchButton = ({
         {
           translateX: withSpring(offset.value, {
             damping: 14,
-            stiffness: 140,
+            stiffness: 90,
             mass: 1,
             overshootClamping: false,
           }),
