@@ -1,35 +1,34 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {TouchableOpacity, Text, View, Animated} from 'react-native';
-import getStyleObj from './style';
+import {TouchableOpacity, Text, View} from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+
 import {Graph} from 'screens/DetailScreen/Model';
+
+import getStyleObj from './style';
 
 export interface ButtonData {
   label: string;
   value: number;
 }
 
+interface TabSwitchButtonProps {
+  tabData: Graph[];
+  onChange?: (item: ButtonData, index: number) => void;
+}
+
 const TabSwitchButton = ({
   tabData,
   onChange = () => {},
-}: {
-  tabData: Graph[];
-  onChange?: (item: ButtonData, index: number) => void;
-}) => {
+}: TabSwitchButtonProps) => {
   const styles = getStyleObj({});
-  const [active, setActive] = useState(tabData[0]);
-  const anim = useRef(new Animated.Value(4));
+  const [active, setActive] = useState<ButtonData>(tabData[0]);
   const [focusSizes, setFocusSizes] = useState({height: 0, width: 0});
   const animatedRangeRef = useRef<number[]>([]);
-
-  const handleAnim = useCallback((value: number) => {
-    Animated.spring(anim.current, {
-      toValue: value,
-      // duration: 2000,
-      friction: 6,
-      tension: 20,
-      useNativeDriver: true,
-    }).start();
-  }, []);
+  const offset = useSharedValue(4);
 
   const handleOnPress = useCallback(
     (data: ButtonData, index: number) => {
@@ -39,22 +38,31 @@ const TabSwitchButton = ({
     [onChange],
   );
 
+  const customSpringStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: withSpring(offset.value, {
+            damping: 14,
+            stiffness: 140,
+            mass: 1,
+            overshootClamping: false,
+          }),
+        },
+      ],
+    };
+  });
+
   return (
     <View style={styles.mainContainer}>
-      <Animated.View
-        style={[
-          styles.focus,
-          focusSizes,
-          {transform: [{translateX: anim.current}]},
-        ]}
-      />
+      <Animated.View style={[styles.focus, focusSizes, customSpringStyles]} />
       {tabData?.map((item, index) => (
         <TouchableOpacity
           onPress={() => {
             handleOnPress(item, index);
             const rangeGenerate =
               index === 0 ? 4 : animatedRangeRef.current[index] * index + 4;
-            handleAnim(rangeGenerate);
+            offset.value = rangeGenerate;
           }}
           onLayout={event => {
             const {height, width} = event.nativeEvent.layout;
@@ -69,8 +77,8 @@ const TabSwitchButton = ({
           disabled={active?.value === item?.value}
           activeOpacity={0.7}
           style={styles.inactiveButton}
-          testID={'switchLeftBTN'}
-          accessibilityLabel={'switchLeftBTN'}>
+          testID={'switchLabelBTN'}
+          accessibilityLabel={'switchLabelBTN'}>
           <Text
             numberOfLines={1}
             style={
@@ -78,8 +86,8 @@ const TabSwitchButton = ({
                 ? styles.activeText
                 : styles.inactiveText
             }
-            testID={'switchLeftLabel#' + item?.value}
-            accessibilityLabel={'switchLeftLabel#' + item?.value}>
+            testID={'switchLabel#' + item?.value}
+            accessibilityLabel={'switchLabel#' + item?.value}>
             {item?.label}
           </Text>
         </TouchableOpacity>
