@@ -182,7 +182,13 @@ const FuelInfoScreen: React.FC = () => {
   );
 
   const renderItem: ListRenderItem<FuelBulletType> = ({item}) => {
-    return <FuelPriceBullet {...item} />;
+    return (
+      <FuelPriceBullet
+        {...item}
+        customStyle={styles.customStyle}
+        customTitle={styles.customTitle}
+      />
+    );
   };
 
   const viewConfig = useRef({viewAreaCoveragePercentThreshold: 50}).current;
@@ -208,7 +214,7 @@ const FuelInfoScreen: React.FC = () => {
             style={{
               fontSize: moderateScale(sizes.h4),
               marginVertical: verticalScale(sizes.s),
-              color: sortType?.key === item?.key ? colors.purple : colors.black,
+              color: sortType?.key === item?.key ? colors.purple : colors.white,
             }}>
             {item?.name}
           </Text>
@@ -282,7 +288,10 @@ const FuelInfoScreen: React.FC = () => {
           handlePosition={'outside'}
           adjustToContentHeight={true}
           panGestureComponentEnabled={true}
-          disableScrollIfPossible={true}>
+          disableScrollIfPossible={true}
+          modalStyle={{
+            backgroundColor: colors.purple01,
+          }}>
           <View
             style={{
               paddingTop: verticalScale(sizes.lx),

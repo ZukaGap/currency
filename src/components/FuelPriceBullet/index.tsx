@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import {Text, View} from 'react-native';
+import {StyleProp, Text, View, ViewStyle} from 'react-native';
 
 import getStyleObj from './style';
 import FastImage from 'react-native-fast-image';
@@ -8,9 +8,17 @@ export interface FuelBulletType {
   name: string;
   price: string;
   company: string;
+  customStyle?: StyleProp<ViewStyle>;
+  customTitle?: StyleProp<ViewStyle>;
 }
 
-const FuelPriceBullet: React.FC<FuelBulletType> = ({name, price, company}) => {
+const FuelPriceBullet: React.FC<FuelBulletType> = ({
+  name,
+  price,
+  company,
+  customStyle,
+  customTitle,
+}) => {
   const styles = getStyleObj();
   const IMG_PATH = useMemo(() => {
     switch (company) {
@@ -31,21 +39,21 @@ const FuelPriceBullet: React.FC<FuelBulletType> = ({name, price, company}) => {
   }, [company]);
 
   return (
-    <View style={[styles.bulletContainer, styles.row]}>
+    <View style={[styles.bulletContainer, styles.row, customStyle]}>
       <FastImage
         style={{width: 40, height: 50}}
         source={IMG_PATH}
         resizeMode={FastImage.resizeMode.contain}
       />
       <View style={[styles.col, {flex: 1}]}>
-        <Text numberOfLines={1} style={styles.title}>
+        <Text numberOfLines={1} style={[styles.title, customTitle]}>
           {company}
         </Text>
-        <Text style={styles.title}>{name}</Text>
+        <Text style={[styles.title, customTitle]}>{name}</Text>
       </View>
       <View style={[styles.col]}>
-        <Text style={styles.title}>ფასი</Text>
-        <Text style={[styles.title]}>{price}</Text>
+        <Text style={[styles.title, customTitle]}>ფასი</Text>
+        <Text style={[styles.title, customTitle]}>{price}</Text>
       </View>
     </View>
   );
