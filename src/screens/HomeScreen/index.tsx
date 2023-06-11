@@ -32,6 +32,8 @@ const HomeScreen: React.FC = () => {
     return (
       <CurrencyBullet
         {...item}
+        customStyle={styles.customStyle}
+        customTitle={styles.customTitle}
         onPress={() => navigate('detailScreen', item)}
       />
     );
