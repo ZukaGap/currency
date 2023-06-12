@@ -25,7 +25,7 @@ const TabSwitchButton = ({
   onChange = () => {},
 }: TabSwitchButtonProps) => {
   const styles = getStyleObj({});
-  const [active, setActive] = useState<ButtonData>(tabData[0]);
+  const [active, setActive] = useState<ButtonData>(tabData?.[0]);
   const [focusSizes, setFocusSizes] = useState({height: 0, width: 0});
   const animatedRangeRef = useRef<number[]>([]);
   const offset = useSharedValue(4);
