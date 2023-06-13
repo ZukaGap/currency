@@ -34,12 +34,13 @@ export const Label = ({state, y, graphs, width, height}: LabelProps) => {
   const translateY = height + PADDING;
   const AJUSTED_SIZE = height - PADDING * 2;
   const text = useDerivedValue(() => {
-    const graph = graphs[state.value.current];
+    const graph = graphs[state.value.next];
+    console.log(graphs);
     return format(
       interpolate(
         y.value,
         [0, AJUSTED_SIZE],
-        [graph.data.maxPrice, graph.data.minPrice],
+        [graph?.data?.maxPrice || 0, graph?.data?.minPrice || 0],
       ),
     );
   }, [y, state]);
@@ -49,12 +50,14 @@ export const Label = ({state, y, graphs, width, height}: LabelProps) => {
       return 0;
     }
     const graph = graphs[state.value.current];
-    const title = format(graph.data.maxPrice);
+    const title = format(graph?.data?.maxPrice || 0);
     const titleWidth = titleFont.getTextWidth(title);
     return width / 2 - titleWidth / 2;
   }, [state, titleFont]);
 
-  const subtitleWidth = subtitleFont?.getTextWidth(String(subtitle)) + 2 ?? 0;
+  const subtitleWidth =
+    subtitleFont?.getTextWidth(String(subtitle) || '') + 2 || 0;
+
   return (
     <>
       <Text
