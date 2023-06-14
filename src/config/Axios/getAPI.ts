@@ -86,15 +86,15 @@ export const fetchConvertedCurrency = async (
 
 export const fetchCurrencyDetails = async (
   currencies: string[],
-  start: Date,
-  end: Date,
+  from: Date,
+  to: Date,
 ): Promise<CurrencyDetails[] | undefined> => {
   try {
-    const endTimeParse = format(end, 'yyyy-MM-dd');
-    const startTimeParse = format(start, 'yyyy-MM-dd');
+    const toTimeParse = format(to, 'yyyy-MM-dd');
+    const fromTimeParse = format(from, 'yyyy-MM-dd');
     const parse = currencies?.join('&currencies=');
     const response = await axios.get(
-      `${API_URL}/currencies/?currencies=${parse}&start=${startTimeParse}&end=${endTimeParse}`,
+      `${API_URL}/currencies/?currencies=${parse}&start=${fromTimeParse}&end=${toTimeParse}`,
     );
 
     return response?.data;

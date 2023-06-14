@@ -1,149 +1,98 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  useWindowDimensions,
-  TouchableOpacity,
-} from 'react-native';
-import {
-  Canvas,
-  Path,
-  Group,
-  LinearGradient,
-  vec,
-} from '@shopify/react-native-skia';
-import Animated, {
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import {GestureDetector} from 'react-native-gesture-handler';
+import {View, useWindowDimensions, Text, TouchableOpacity} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import TabSwitchButton, {ButtonData} from 'components/TabSwitchButton';
-import {useNavigation, useRoute} from '@react-navigation/native';
-
-import {PADDING, COLORS, getGraph, Graph, buildGraph, PriceList} from './Model';
-import {getYForX} from './Math';
-import {Cursor} from './componentsChild/Cursor';
-import {List} from './componentsChild/List';
-import {Header} from './componentsChild/Header';
-import {Label} from './componentsChild/Label';
-import {useGraphTouchHandler} from './componentsChild/useGraphTouchHandler';
+import {GraphPoint, LineGraph} from 'react-native-graph';
 import {CurrenciesType, fetchCurrencyDetails} from 'config/Axios/getAPI';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {format, subMonths, subWeeks} from 'date-fns';
+import getSymbolFromCurrency from 'currency-symbol-map';
 
+import TabSwitchButton from 'components/TabSwitchButton';
+import List from './componentsChild/List';
+
+import {colors} from 'styles/colors';
 import {Back} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
-import {colors} from 'styles/colors';
 import getStyleObj from './style';
-import {subMonths} from 'date-fns';
 
-const touchableCursorSize = 80;
+const graphsData = [
+  {
+    label: '1W',
+    value: 0,
+  },
+  {
+    label: '1M',
+    value: 1,
+  },
+  {
+    label: '3M',
+    value: 3,
+  },
+  {
+    label: '6M',
+    value: 6,
+  },
+  {
+    label: '1Y',
+    value: 12,
+  },
+];
 
 export const DetailScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
-  const {width, height} = useWindowDimensions();
   const {params} = useRoute();
-  const {code, rate, name}: CurrenciesType = params || {};
+  const {width, height} = useWindowDimensions();
   const {setOptions, goBack} = useNavigation();
   const calcHeight = Math.min(width, height) / 2;
-  const translateY = calcHeight + PADDING;
-  const [rangeOfDate, setRangeOfDate] = useState<number>(0);
-  const [indexOfTab, setIndexOfTab] = useState<number>(0);
-  // animation value to transition from one graph to the next
-  const transition = useSharedValue(0);
-  // indicices of the current and next graphs
-  const state = useSharedValue({
-    next: 0,
-    current: 0,
-  });
-  const graphsData = useSharedValue<Graph[]>([
-    {
-      label: '1W',
-      value: 0,
-    },
-    {
-      label: '1M',
-      value: 1,
-    },
-    {
-      label: '3M',
-      value: 3,
-    },
-    {
-      label: '6M',
-      value: 6,
-    },
-    {
-      label: '1Y',
-      value: 12,
-    },
-  ]);
+  const {code, rate, name, validFromDate}: CurrenciesType = params || {};
+  const currencySymbol = useMemo(() => getSymbolFromCurrency(code), [code]);
+  const [graphPoints, setGraphPoints] = useState<GraphPoint[]>([]);
+  const [currentPoint, setCurrentPoint] = useState<GraphPoint>();
 
-  useEffect(() => {
-    getCurrencyInRange();
-  }, [rangeOfDate]);
+  const getPoints = useCallback(
+    async (from: Date) => {
+      try {
+        const response = await fetchCurrencyDetails([code], from, new Date());
 
-  const graphs = useMemo(
-    () => getGraph(code, rangeOfDate, width, calcHeight),
-    [code, width, calcHeight, rangeOfDate],
-  );
-  // path to display
-  const path = useDerivedValue(() => {
-    const {current, next} = state.value;
-    const start = graphs[current].data.path;
-    const end = graphs[next].data.path;
-    return end.interpolate(start, transition.value)!;
-  }, [graphsData]);
-  //   and y values of the cursor
-  const x = useSharedValue(0);
-  const y = useDerivedValue(() => {
-    return getYForX(path.value.toCmds(), x.value);
-  }, [path, x]);
-
-  const getCurrencyInRange = useCallback(
-    async (index?: number) => {
-      if (graphsData.value[index || indexOfTab].data === undefined) {
-        const response = await fetchCurrencyDetails(
-          [code],
-          subMonths(new Date(), rangeOfDate),
-          new Date(),
-        );
-        const prices: PriceList = response?.map(item => {
-          return [
-            item?.currencies?.[0]?.validFromDate,
-            item?.currencies?.[0]?.rate,
-            item?.currencies?.[0]?.diff,
-          ];
+        const prices = response?.map(item => {
+          return {
+            value: item?.currencies?.[0]?.rate,
+            date: new Date(item?.currencies[0].validFromDate),
+          };
         });
-        const renewGraphs = buildGraph(
-          {percent_change: 0, prices: prices},
-          graphsData.value[index || indexOfTab].label,
-          width,
-          height,
-        );
-        graphsData.value[index || indexOfTab] = {
-          ...graphsData.value[index || indexOfTab],
-          data: renewGraphs,
-        };
-      }
+
+        setGraphPoints(prices);
+      } catch (err) {}
     },
-    [graphsData.value, rangeOfDate, code, width, height, indexOfTab],
+    [code],
   );
 
-  const gesture = useGraphTouchHandler(x, width - 16);
-  const style = useAnimatedStyle(() => {
-    return {
-      position: 'absolute',
-      width: touchableCursorSize,
-      height: touchableCursorSize,
-      left: x.value - touchableCursorSize / 2,
-      top: translateY + y.value - touchableCursorSize / 2,
-    };
-  });
+  const priceTitle = useCallback(
+    (resp?: GraphPoint): void => {
+      setCurrentPoint({
+        value: resp?.value || rate,
+        date: resp?.date || new Date(validFromDate),
+      });
+    },
+    [rate, validFromDate],
+  );
+
+  const changeTime = useCallback(
+    item => {
+      const from =
+        item?.value === 0
+          ? subWeeks(new Date(), 1)
+          : subMonths(new Date(), item?.value);
+
+      getPoints(from);
+    },
+    [getPoints],
+  );
 
   useEffect(() => {
+    getPoints(subWeeks(new Date(), 1));
+
     setOptions({
       title: name,
       headerLeft: () => (
@@ -159,46 +108,30 @@ export const DetailScreen: React.FC = () => {
 
   return (
     <View style={styles.safeAreaWrapper}>
-      <View>
-        <Canvas style={{width, height: 2 * calcHeight + 30}}>
-          <Label
-            state={state}
-            y={y}
-            graphs={graphs}
-            width={width}
-            height={calcHeight}
-          />
-          <Group transform={[{translateY}]}>
-            <Path
-              style="stroke"
-              path={path}
-              strokeWidth={4}
-              strokeJoin="round"
-              strokeCap="round">
-              <LinearGradient
-                start={vec(0, 0)}
-                end={vec(width, 0)}
-                colors={COLORS}
-              />
-            </Path>
-            <Cursor x={x} y={y} width={width} />
-          </Group>
-        </Canvas>
-        <GestureDetector gesture={gesture}>
-          <Animated.View style={style} />
-        </GestureDetector>
+      <View style={styles.labelContainer}>
+        <Text style={styles.valueLabel}>
+          {currencySymbol} {currentPoint?.value}
+        </Text>
+        <Text style={styles.dateLabel}>
+          {String(format(currentPoint?.date || 0, 'PP'))}
+        </Text>
       </View>
+      <LineGraph
+        points={graphPoints}
+        animated={true}
+        color={colors.purple}
+        enablePanGesture={true}
+        panGestureDelay={50}
+        style={styles.graph}
+        // onGestureStart={() => hapticFeedback('impactLight')}
+        onPointSelected={priceTitle}
+        onGestureEnd={priceTitle}
+      />
       <View style={{paddingHorizontal: 16, paddingBottom: 16}}>
         <TabSwitchButton
-          tabData={graphsData.value}
+          tabData={graphsData}
           onChange={(item, index) => {
-            state.value = {current: state.value.next, next: index};
-            transition.value = 0;
-            transition.value = withTiming(1, {
-              duration: 750,
-            });
-            setRangeOfDate(item?.value);
-            setIndexOfTab(index);
+            changeTime(item, index);
           }}
         />
       </View>

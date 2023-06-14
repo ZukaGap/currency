@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {memo, useCallback} from 'react';
 import {CurrenciesType} from 'config/Axios/getAPI';
 import {
   ActivityIndicator,
@@ -16,7 +16,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {generateBoxShadowStyle} from 'utils/generateBoxShadow';
 
-export const List = () => {
+const List = () => {
   const insets = useSafeAreaInsets();
   const {push} = useNavigation();
   const {data} = useRecoilValue(currenciesAtom);
@@ -78,3 +78,5 @@ const styles = StyleSheet.create({
   customStyle: {backgroundColor: colors.transparent},
   customTitle: {color: colors.white},
 });
+
+export default memo(List);

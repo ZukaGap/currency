@@ -15,6 +15,7 @@ import {Modalize, useModalize} from 'react-native-modalize';
 import {Portal} from 'react-native-portalize';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {useNavigation} from '@react-navigation/native';
+import getSymbolFromCurrency from 'currency-symbol-map';
 
 import {
   currencyCodesAtom,
@@ -27,7 +28,6 @@ import getStyleObj from './style';
 import {Back, Down, Swap} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
-import getSymbolFromCurrency from 'currency-symbol-map';
 
 interface RenderItemType {
   item: CurrencyCodesType;

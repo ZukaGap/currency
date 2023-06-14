@@ -1,4 +1,4 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, {memo, useCallback, useRef, useState} from 'react';
 import {TouchableOpacity, Text, View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -96,4 +96,4 @@ const TabSwitchButton = ({
   );
 };
 
-export default TabSwitchButton;
+export default memo(TabSwitchButton);
