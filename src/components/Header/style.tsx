@@ -35,6 +35,9 @@ const getStyleObj = () => {
       justifyContent: 'center',
       alignItems: 'center',
     },
+    drawerBTN: {
+      marginRight: sizes.s,
+    },
   });
 };
 

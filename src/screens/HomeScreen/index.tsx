@@ -1,5 +1,5 @@
 import React, {useCallback, useRef} from 'react';
-import {ActivityIndicator, ListRenderItem, View, Animated} from 'react-native';
+import {ActivityIndicator, ListRenderItem, Animated, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
 import {useNavigation} from '@react-navigation/native';
@@ -9,7 +9,7 @@ import {
 } from 'react-navigation-collapsible';
 
 import {currenciesAtom} from 'store/atom/getAtom';
-import {CurrencyBullet, Header} from 'components';
+import {CurrencyBullet, DrawerSceneWrapper, Header} from 'components';
 import {CurrenciesType} from 'config/Axios/getAPI';
 
 import getStyleObj from './style';
@@ -40,33 +40,35 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-    <View style={styles.safeAreaWrapper}>
-      <Animated.FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingTop: containerPaddingTop,
-          paddingBottom: insets.bottom,
-        }}
-        scrollIndicatorInsets={{top: scrollIndicatorInsetTop}}
-        bounces={false}
-        scrollEventThrottle={16}
-        viewabilityConfig={viewConfig}
-        onScroll={onScroll}
-        ListEmptyComponent={() => (
-          <View>
-            <ActivityIndicator size={'large'} color={colors.purple03} />
+    <DrawerSceneWrapper>
+      <View style={styles.safeAreaWrapper}>
+        <Animated.FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingTop: containerPaddingTop,
+            paddingBottom: insets.bottom,
+          }}
+          scrollIndicatorInsets={{top: scrollIndicatorInsetTop}}
+          bounces={false}
+          scrollEventThrottle={16}
+          viewabilityConfig={viewConfig}
+          onScroll={onScroll}
+          ListEmptyComponent={() => (
+            <View>
+              <ActivityIndicator size={'large'} color={colors.purple03} />
+            </View>
+          )}
+        />
+        <CollapsibleSubHeaderAnimator translateY={translateY}>
+          <View style={styles.header}>
+            <Header />
           </View>
-        )}
-      />
-      <CollapsibleSubHeaderAnimator translateY={translateY}>
-        <View style={styles.header}>
-          <Header />
-        </View>
-      </CollapsibleSubHeaderAnimator>
-    </View>
+        </CollapsibleSubHeaderAnimator>
+      </View>
+    </DrawerSceneWrapper>
   );
 };
 

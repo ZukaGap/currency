@@ -1,72 +1,53 @@
-import React from 'react';
+import * as React from 'react';
+import {
+  createDrawerNavigator,
+  DrawerNavigationOptions,
+} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
-import {CardStyleInterpolators} from '@react-navigation/stack';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import HomeScreen from 'screens/HomeScreen';
-import CalculatorScreen from 'screens/CalculatorScreen';
-import FuelInfoScreen from 'screens/FuelInfoScreen';
-
+import MainStack from './MainStack';
+import CartScreen from 'screens/CartScreen';
+import FavoritesScreen from 'screens/FavoritesScreen';
+import {sizes} from 'styles/sizes';
+import CustomDrawer from 'components/CustomDrawer';
 import {colors} from 'styles/colors';
-import {DetailScreen} from 'screens/DetailScreen';
+import {Platform} from 'react-native';
 
-const {Navigator, Screen} = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const Routes: React.FC = () => {
   return (
     <NavigationContainer>
-      <Navigator
+      <Drawer.Navigator
+        drawerContent={props => <CustomDrawer {...props} />}
         screenOptions={() => ({
-          gestureEnabled: true,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          headerShown: true,
-          headerTransparent: true,
-          headerBackTitleVisible: false,
-          headerStyle: {},
-          headerTitleStyle: {
-            fontSize: 16,
+          headerShown: false,
+          drawerActiveBackgroundColor: colors.purple03,
+          drawerInactiveBackgroundColor: colors.transparent,
+          drawerActiveTintColor: colors.purple,
+          drawerInactiveTintColor: colors.purple01,
+          drawerHideStatusBarOnOpen: false,
+          overlayColor: colors.transparent,
+          drawerStyle: {
+            backgroundColor: colors.purple01,
+            // width: '60%',
           },
-          headerBackButtonMenuEnabled: false,
+          sceneContainerStyle: {
+            backgroundColor: colors.purple01,
+          },
+          drawerItemStyle: {
+            borderRadius: 12,
+          },
+          drawerType: 'slide',
+          drawerContentStyles: {
+            backgroundColor: colors.transparent,
+          },
         })}
-        initialRouteName={'homeScreen'}>
-        <Screen
-          name="homeScreen"
-          component={HomeScreen}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Screen
-          name="detailScreen"
-          component={DetailScreen}
-          options={{
-            headerShown: true,
-            title: '',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {color: colors.purple},
-          }}
-        />
-        <Screen
-          name="calculatorScreen"
-          component={CalculatorScreen}
-          options={{
-            headerShown: true,
-            title: 'Convert',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {color: colors.purple},
-          }}
-        />
-        <Screen
-          name="fuelInfoScreen"
-          component={FuelInfoScreen}
-          options={{
-            headerShown: true,
-            title: '',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {color: colors.purple},
-          }}
-        />
-      </Navigator>
+        initialRouteName="Start">
+        <Drawer.Screen name="Start" component={MainStack} />
+        <Drawer.Screen name="Cart" component={CartScreen} />
+        <Drawer.Screen name="Favorites" component={FavoritesScreen} />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 };
