@@ -4,11 +4,11 @@ import {CardStyleInterpolators} from '@react-navigation/stack';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import HomeScreen from 'screens/HomeScreen';
-import DetailScreen from 'screens/DetailScreen';
 import CalculatorScreen from 'screens/CalculatorScreen';
 import FuelInfoScreen from 'screens/FuelInfoScreen';
 
 import {colors} from 'styles/colors';
+import {DetailScreen} from 'screens/DetailScreen';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 
@@ -60,7 +60,7 @@ const Routes: React.FC = () => {
           name="fuelInfoScreen"
           component={FuelInfoScreen}
           options={{
-            headerShown: true,
+            headerShown: false,
             title: '',
             headerTitleAlign: 'center',
             headerTitleStyle: {color: colors.purple},

@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   FlatList,
   ListRenderItem,
+  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -22,7 +23,7 @@ import {
   socarFuelInfoAtom,
   wissolFuelInfoAtom,
 } from 'store/atom/getAtom';
-import {FuelPriceBullet} from 'components';
+import {DrawerWrapper, FuelCompanyBullet, FuelPriceBullet} from 'components';
 import {FuelBulletType} from 'components/FuelPriceBullet';
 import getRompetrolInfo from 'utils/websiteParsers/rompetrolParser';
 import {
@@ -30,13 +31,19 @@ import {
   moderateScale,
   verticalScale,
 } from 'replacers/scalling';
-import {sortToHigh, sortToLow} from 'utils/sort';
+import {
+  sortToHigh,
+  sortToHighByBrands,
+  sortToLow,
+  sortToLowByBrands,
+} from 'utils/sort';
 
 import getStyleObj from './style';
-import {Back, Filter} from 'assets/SVG';
+import {Back, Drawer, Filter} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
 import getGulfInfo from 'utils/websiteParsers/gulfFuelParser';
+import {FlashList} from '@shopify/flash-list';
 
 interface FilterType {
   name: string;
@@ -53,32 +60,32 @@ const filterType: FilterType[] = [
     key: 'high-price',
   },
   {
-    name: 'ბრენდები + კლებადი',
-    key: 'brand-high-price',
-  },
-  {
     name: 'ბრენდები + ზრდადი',
     key: 'brand-low-price',
+  },
+  {
+    name: 'ბრენდები + კლებადი',
+    key: 'brand-high-price',
   },
 ];
 
 const FuelInfoScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const {goBack, setOptions} = useNavigation();
   const {height} = useWindowDimensions();
+  const drawerRef = useRef(null);
   const styles = getStyleObj(insets);
   const modalizeRef = useRef<Modalize>(null);
   const [portalInfo, setPortalInfo] = useRecoilState(sendPortalFuelInfoAtom);
   const [rompetrolInfo, setRompetrolInfo] = useRecoilState(
     sendRompetrolFuelInfoAtom,
   );
+  const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
   const [gulfInfo, setGulfInfo] = useRecoilState(sendGulfFuelInfoAtom);
   const [isLoadingPortalInfo, setIsLoadingPortalInfo] = useState(false);
   const [isLoadingRompetrolInfo, setIsLoadingRompetrolInfo] = useState(false);
   const [isLoadingGulflInfo, setIsLoadingGulfInfo] = useState(false);
   const {wissolPrices, isLoadingWissolInfo} =
     useRecoilValue(wissolFuelInfoAtom);
-  const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
   const [sortType, setSortType] = useState<FilterType>(filterType[0]);
   const listData = useMemo<FuelBulletType[]>(() => {
     if (sortType?.key === 'low-price') {
@@ -98,21 +105,21 @@ const FuelInfoScreen: React.FC = () => {
         ...gulfInfo,
       ]);
     } else if (sortType?.key === 'brand-low-price') {
-      return [
-        ...sortToHigh(portalInfo),
-        ...sortToHigh(socarPrices),
-        ...sortToHigh(rompetrolInfo),
-        ...sortToHigh(wissolPrices),
-        ...sortToHigh(gulfInfo),
-      ];
+      return sortToHighByBrands({
+        portal: portalInfo,
+        socar: socarPrices,
+        rompetrol: rompetrolInfo,
+        wissol: wissolPrices,
+        gulf: gulfInfo,
+      });
     } else if (sortType?.key === 'brand-high-price') {
-      return [
-        ...sortToLow(portalInfo),
-        ...sortToLow(socarPrices),
-        ...sortToLow(rompetrolInfo),
-        ...sortToLow(wissolPrices),
-        ...sortToLow(gulfInfo),
-      ];
+      return sortToLowByBrands({
+        portal: portalInfo,
+        socar: socarPrices,
+        rompetrol: rompetrolInfo,
+        wissol: wissolPrices,
+        gulf: gulfInfo,
+      });
     }
     return [];
   }, [
@@ -157,33 +164,29 @@ const FuelInfoScreen: React.FC = () => {
     } catch (err) {}
   };
 
-  useEffect(() => {
-    setOptions({
-      title: 'საწვავის ფასები',
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => {
-            goBack();
-          }}>
-          <Back width={sizes.is} height={sizes.is} fill={colors.purple03} />
-        </TouchableOpacity>
-      ),
-      headerRight: () => (
-        <TouchableOpacity onPress={onOpen}>
-          <Filter width={sizes.is} height={sizes.is} fill={colors.purple} />
-        </TouchableOpacity>
-      ),
-    });
-  }, []);
-
   const keyExtractor = useCallback(
     (item: FuelBulletType) => item?.company + item?.name + item?.price,
     [],
   );
 
-  const renderItem: ListRenderItem<FuelBulletType> = ({item}) => {
-    return <FuelPriceBullet {...item} />;
-  };
+  const renderItem = useCallback(
+    ({item}: {item: FuelBulletType}) => {
+      if (
+        sortType?.key === 'brand-low-price' ||
+        sortType?.key === 'brand-high-price'
+      ) {
+        return <FuelCompanyBullet {...item} />;
+      }
+      return (
+        <FuelPriceBullet
+          {...item}
+          customStyle={styles.customStyle}
+          customTitle={styles.customTitle}
+        />
+      );
+    },
+    [sortType],
+  );
 
   const viewConfig = useRef({viewAreaCoveragePercentThreshold: 50}).current;
 
@@ -208,7 +211,7 @@ const FuelInfoScreen: React.FC = () => {
             style={{
               fontSize: moderateScale(sizes.h4),
               marginVertical: verticalScale(sizes.s),
-              color: sortType?.key === item?.key ? colors.purple : colors.black,
+              color: sortType?.key === item?.key ? colors.purple : colors.white,
             }}>
             {item?.name}
           </Text>
@@ -262,14 +265,45 @@ const FuelInfoScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.safeAreaWrapper}>
-      <FlatList
+    <DrawerWrapper ref={drawerRef}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginHorizontal: 24,
+          marginBottom: 16,
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            drawerRef?.current.openDrawer();
+          }}>
+          <Drawer width={sizes.is} height={sizes.is} fill={colors.purple} />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 16,
+            textAlign: 'center',
+            color: colors.purple,
+          }}>
+          {'საწვავის ფასები'}
+        </Text>
+        <TouchableOpacity onPress={onOpen}>
+          <Filter width={sizes.is} height={sizes.is} fill={colors.purple} />
+        </TouchableOpacity>
+      </View>
+      <FlashList
         data={listData}
         renderItem={renderItem}
+        estimatedItemSize={70}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
         bounces={false}
         style={{height: height}}
+        contentContainerStyle={Platform.select({
+          ios: {paddingBottom: insets.bottom},
+          android: {paddingBottom: insets.bottom},
+          default: {},
+        })}
         scrollEventThrottle={16}
         viewabilityConfig={viewConfig}
         ListHeaderComponent={ListHeaderComponent}
@@ -282,7 +316,10 @@ const FuelInfoScreen: React.FC = () => {
           handlePosition={'outside'}
           adjustToContentHeight={true}
           panGestureComponentEnabled={true}
-          disableScrollIfPossible={true}>
+          disableScrollIfPossible={true}
+          modalStyle={{
+            backgroundColor: colors.purple01,
+          }}>
           <View
             style={{
               paddingTop: verticalScale(sizes.lx),
@@ -302,7 +339,7 @@ const FuelInfoScreen: React.FC = () => {
           </View>
         </Modalize>
       </Portal>
-    </SafeAreaView>
+    </DrawerWrapper>
   );
 };
 

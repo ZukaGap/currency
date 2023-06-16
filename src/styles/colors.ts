@@ -1,4 +1,5 @@
 export const enum colors {
+  transparent = 'transparent',
   active = '#5E2D9C',
   inactive = '#C4C4C4',
 

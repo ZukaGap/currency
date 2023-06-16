@@ -1,73 +1,100 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {View, useWindowDimensions, Text, TouchableOpacity} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {GraphPoint, LineGraph} from 'react-native-graph';
+import {CurrenciesType, fetchCurrencyDetails} from 'config/Axios/getAPI';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {format, subMonths, subWeeks} from 'date-fns';
 import getSymbolFromCurrency from 'currency-symbol-map';
-import {max, min, subMonths} from 'date-fns';
-import {GraphPoint, LineGraph, SelectionDot} from 'react-native-graph';
-import {GraphRange} from 'react-native-graph/lib/typescript/LineGraphProps';
 
-import {
-  CurrenciesType,
-  CurrencyDetails,
-  fetchCurrencyDetails,
-} from 'config/Axios/getAPI';
+import TabSwitchButton from 'components/TabSwitchButton';
+import List from './componentsChild/List';
 
-import getStyleObj from './style';
 import {colors} from 'styles/colors';
-import {sizes} from 'styles/sizes';
 import {Back} from 'assets/SVG';
+import {sizes} from 'styles/sizes';
+import getStyleObj from './style';
 
-const GRADIENT_FILL_COLORS = ['#7476df5D', '#7476df4D', '#7476df00'];
+const graphsData = [
+  {
+    label: '1W',
+    value: 0,
+  },
+  {
+    label: '1M',
+    value: 1,
+  },
+  {
+    label: '3M',
+    value: 3,
+  },
+  {
+    label: '6M',
+    value: 6,
+  },
+  {
+    label: '1Y',
+    value: 12,
+  },
+];
 
-const DetailScreen: React.FC = () => {
+export const DetailScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
-  const {setOptions, goBack} = useNavigation();
   const {params} = useRoute();
-  const {
-    code,
-    quantity,
-    rateFormated,
-    diffFormated,
-    rate,
-    name,
-    diff,
-    date,
-    validFromDate,
-  }: CurrenciesType = params || {};
-  const [currencyData, setCurrencyData] = useState<CurrencyDetails[]>({
-    date: null,
-    currencies: [],
-  });
-  const [loading, setLoading] = useState<boolean>(true);
-  const changeValue = useMemo(
-    () =>
-      `${quantity} ${getSymbolFromCurrency(
-        code,
-      )} - ${rate} ${getSymbolFromCurrency('GEL')}`,
-    [quantity, rate, code],
-  );
-  const [currencyMaxValue, setCurrencyMaxValue] = useState<number>(0);
-  const [currencyMinValue, setCurrencyMinValue] = useState<number>(0);
+  const {width, height} = useWindowDimensions();
+  const {setOptions, goBack} = useNavigation();
+  const calcHeight = Math.min(width, height) / 2;
+  const {code, rate, name, validFromDate}: CurrenciesType = params || {};
+  const currencySymbol = useMemo(() => getSymbolFromCurrency(code), [code]);
+  const [graphPoints, setGraphPoints] = useState<GraphPoint[]>([]);
+  const [currentPoint, setCurrentPoint] = useState<GraphPoint>();
 
-  const points = useMemo<GraphPoint[]>(() => {
-    let dataArr: GraphPoint[] = [];
+  const getPoints = useCallback(
+    async (from: Date) => {
+      try {
+        const response = await fetchCurrencyDetails([code], from, new Date());
 
-    if (currencyData?.length) {
-      currencyData?.forEach(item => {
-        dataArr.push({
-          date: new Date(item?.currencies[0].validFromDate),
-          value: item?.currencies[0].rate,
+        const prices = response?.map(item => {
+          return {
+            value: item?.currencies?.[0]?.rate,
+            date: new Date(item?.currencies[0].validFromDate),
+          };
         });
+
+        setGraphPoints(prices);
+      } catch (err) {}
+    },
+    [code],
+  );
+
+  const priceTitle = useCallback(
+    (resp?: GraphPoint): void => {
+      setCurrentPoint({
+        value: resp?.value || rate,
+        date: resp?.date || new Date(validFromDate),
       });
-    }
-    return dataArr;
-  }, [currencyData]);
+    },
+    [rate, validFromDate],
+  );
+
+  const changeTime = useCallback(
+    item => {
+      const from =
+        item?.value === 0
+          ? subWeeks(new Date(), 1)
+          : subMonths(new Date(), item?.value);
+
+      getPoints(from);
+    },
+    [getPoints],
+  );
 
   useEffect(() => {
+    getPoints(subWeeks(new Date(), 1));
+
     setOptions({
-      title: code,
+      title: name,
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => {
@@ -79,96 +106,36 @@ const DetailScreen: React.FC = () => {
     });
   }, []);
 
-  useEffect(() => {
-    setLoading(true);
-
-    fetchCurrencyDetails(
-      [code],
-      subMonths(new Date(), 1),
-      new Date(),
-      response => {
-        setCurrencyData(response);
-        setLoading(false);
-      },
-    );
-  }, [code]);
-
-  const range: GraphRange | undefined = useMemo(() => {
-    let timeArr: Date[] = [];
-    let minValue = points?.[0]?.value;
-    let maxValue = points?.[0]?.value;
-    points?.forEach(item => {
-      timeArr.push(item?.date);
-      if (item?.value < minValue) {
-        minValue = item?.value;
-      }
-      if (item?.value > maxValue) {
-        maxValue = item?.value;
-      }
-    });
-
-    console.log(timeArr);
-
-    if (!timeArr?.length) return undefined;
-
-    setCurrencyMaxValue(maxValue);
-    setCurrencyMinValue(minValue);
-
-    return {
-      x: {
-        min: min(timeArr),
-        max: max(timeArr),
-      },
-      y: {
-        min: minValue,
-        max: maxValue,
-      },
-    };
-  }, [points]);
-
   return (
-    <SafeAreaView style={styles.safeAreaWrapper}>
-      <View>
-        <View style={styles.rate}>
-          <Text style={styles.rateValue}>
-            {getSymbolFromCurrency(code)} {rate}
-          </Text>
-          <Text style={styles.rateDifference}>
-            {diff >= 0 ? '+' : '-'} {diffFormated}
-          </Text>
-        </View>
-        <LineGraph
-          points={points}
-          color={colors.purple}
-          style={styles.graph}
-          // gradientFillColors={GRADIENT_FILL_COLORS}
-          enablePanGesture={true}
-          // enableFadeInMask={true}
-          SelectionDot={SelectionDot}
-          // enableIndicator={true}
-          horizontalPadding={sizes.lxx}
-          verticalPadding={sizes.lxx}
-          // indicatorPulsating={true}
-          animated={true}
-          panGestureDelay={300}
-          // onGestureStart={() => hapticFeedback('impactLight')}
-          onPointSelected={p => console.log(p)}
-          // onGestureEnd={() => resetPriceTitle()}
-          // range={range}
-          // TopAxisLabel={() => (
-          //   <View>
-          //     <Text>{currencyMaxValue}</Text>
-          //   </View>
-          // )}
-          // BottomAxisLabel={() => (
-          //   <View>
-          //     <Text>{currencyMinValue}</Text>
-          //   </View>
-          // )}
+    <View style={styles.safeAreaWrapper}>
+      <View style={styles.labelContainer}>
+        <Text style={styles.valueLabel}>
+          {currencySymbol} {currentPoint?.value}
+        </Text>
+        <Text style={styles.dateLabel}>
+          {String(format(currentPoint?.date || 0, 'PP'))}
+        </Text>
+      </View>
+      <LineGraph
+        points={graphPoints}
+        animated={true}
+        color={colors.purple}
+        enablePanGesture={true}
+        panGestureDelay={50}
+        style={styles.graph}
+        // onGestureStart={() => hapticFeedback('impactLight')}
+        onPointSelected={priceTitle}
+        onGestureEnd={priceTitle}
+      />
+      <View style={{paddingHorizontal: 16, paddingBottom: 16}}>
+        <TabSwitchButton
+          tabData={graphsData}
+          onChange={(item, index) => {
+            changeTime(item, index);
+          }}
         />
       </View>
-    </SafeAreaView>
+      <List />
+    </View>
   );
 };
-
-export default DetailScreen;

@@ -34,10 +34,10 @@ const getStyleObj = () => {
       alignItems: 'flex-end',
     },
     green: {
-      color: colors.green,
+      color: colors.Green500,
     },
     red: {
-      color: colors.red,
+      color: colors.Red600,
     },
   });
 };

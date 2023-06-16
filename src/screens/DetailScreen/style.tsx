@@ -16,7 +16,7 @@ const getStyleObj = (insets: EdgeInsets) => {
     safeAreaWrapper: {
       flex: 1,
       backgroundColor: colors.purple01,
-      paddingHorizontal: 16,
+      // paddingHorizontal: 16,
       ...Platform.select({
         android: {
           paddingTop: sizes.m * 6,
@@ -36,12 +36,6 @@ const getStyleObj = (insets: EdgeInsets) => {
       paddingVertical: verticalScale(sizes.s),
       paddingHorizontal: horizontalScale(sizes.s),
       marginBottom: verticalScale(sizes.s),
-    },
-    label: {
-      fontFamily: fonts.MontserratRegular,
-      fontSize: moderateScale(sizes.h5),
-      color: colors.purple00,
-      transform: [{scaleX: 1}],
     },
     value: {
       fontFamily: fonts.MontserratRegular,
@@ -66,10 +60,28 @@ const getStyleObj = (insets: EdgeInsets) => {
     },
     graph: {
       alignSelf: 'center',
-      width: '100%',
-      aspectRatio: 1.4,
+      width: '90%',
+      aspectRatio: 1.2,
       marginVertical: 20,
       transform: [{scaleX: -1}],
+    },
+    labelContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 40,
+    },
+    valueLabel: {
+      fontFamily: fonts.MontserratRegular,
+      fontSize: moderateScale(sizes.h1),
+      color: colors.purple,
+      transform: [{scaleX: 1}],
+    },
+    dateLabel: {
+      fontFamily: fonts.MontserratRegular,
+      fontSize: moderateScale(sizes.h1),
+      color: colors.purple,
+      transform: [{scaleX: 1}],
+      marginTop: 4,
     },
   });
 };

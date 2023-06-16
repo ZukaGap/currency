@@ -72,7 +72,7 @@ export const fetchConvertedCurrency = async (
   codeTo: string,
   quantity: string,
   callBack: (value: string) => void,
-): Promise<number> => {
+) => {
   try {
     const response = await axios.get(
       `${API_URL}/currencies/calculator/?codeFrom=${codeFrom}&codeTo=${codeTo}&quantity=${quantity}`,
@@ -86,18 +86,18 @@ export const fetchConvertedCurrency = async (
 
 export const fetchCurrencyDetails = async (
   currencies: string[],
-  start: Date,
-  end: Date,
-  callBack: (value: CurrencyDetails[]) => void,
-) => {
+  from: Date,
+  to: Date,
+): Promise<CurrencyDetails[] | undefined> => {
   try {
-    const endTimeParse = format(end, 'yyyy-MM-dd');
-    const startTimeParse = format(start, 'yyyy-MM-dd');
+    const toTimeParse = format(to, 'yyyy-MM-dd');
+    const fromTimeParse = format(from, 'yyyy-MM-dd');
     const parse = currencies?.join('&currencies=');
     const response = await axios.get(
-      `${API_URL}/currencies/?currencies=${parse}&start=${startTimeParse}&end=${endTimeParse}`,
+      `${API_URL}/currencies/?currencies=${parse}&start=${fromTimeParse}&end=${toTimeParse}`,
     );
-    callBack(response?.data);
+
+    return response?.data;
   } catch (err) {}
 };
 
