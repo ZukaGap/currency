@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   FlatList,
   ListRenderItem,
+  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -22,7 +23,7 @@ import {
   socarFuelInfoAtom,
   wissolFuelInfoAtom,
 } from 'store/atom/getAtom';
-import {DrawerWrapper, FuelPriceBullet} from 'components';
+import {DrawerWrapper, FuelCompanyBullet, FuelPriceBullet} from 'components';
 import {FuelBulletType} from 'components/FuelPriceBullet';
 import getRompetrolInfo from 'utils/websiteParsers/rompetrolParser';
 import {
@@ -30,7 +31,12 @@ import {
   moderateScale,
   verticalScale,
 } from 'replacers/scalling';
-import {sortToHigh, sortToLow} from 'utils/sort';
+import {
+  sortToHigh,
+  sortToHighByBrands,
+  sortToLow,
+  sortToLowByBrands,
+} from 'utils/sort';
 
 import getStyleObj from './style';
 import {Back, Drawer, Filter} from 'assets/SVG';
@@ -54,12 +60,12 @@ const filterType: FilterType[] = [
     key: 'high-price',
   },
   {
-    name: 'ბრენდები + კლებადი',
-    key: 'brand-high-price',
-  },
-  {
     name: 'ბრენდები + ზრდადი',
     key: 'brand-low-price',
+  },
+  {
+    name: 'ბრენდები + კლებადი',
+    key: 'brand-high-price',
   },
 ];
 
@@ -73,13 +79,13 @@ const FuelInfoScreen: React.FC = () => {
   const [rompetrolInfo, setRompetrolInfo] = useRecoilState(
     sendRompetrolFuelInfoAtom,
   );
+  const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
   const [gulfInfo, setGulfInfo] = useRecoilState(sendGulfFuelInfoAtom);
   const [isLoadingPortalInfo, setIsLoadingPortalInfo] = useState(false);
   const [isLoadingRompetrolInfo, setIsLoadingRompetrolInfo] = useState(false);
   const [isLoadingGulflInfo, setIsLoadingGulfInfo] = useState(false);
   const {wissolPrices, isLoadingWissolInfo} =
     useRecoilValue(wissolFuelInfoAtom);
-  const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
   const [sortType, setSortType] = useState<FilterType>(filterType[0]);
   const listData = useMemo<FuelBulletType[]>(() => {
     if (sortType?.key === 'low-price') {
@@ -99,21 +105,21 @@ const FuelInfoScreen: React.FC = () => {
         ...gulfInfo,
       ]);
     } else if (sortType?.key === 'brand-low-price') {
-      return [
-        ...sortToHigh(portalInfo),
-        ...sortToHigh(socarPrices),
-        ...sortToHigh(rompetrolInfo),
-        ...sortToHigh(wissolPrices),
-        ...sortToHigh(gulfInfo),
-      ];
+      return sortToHighByBrands({
+        portal: portalInfo,
+        socar: socarPrices,
+        rompetrol: rompetrolInfo,
+        wissol: wissolPrices,
+        gulf: gulfInfo,
+      });
     } else if (sortType?.key === 'brand-high-price') {
-      return [
-        ...sortToLow(portalInfo),
-        ...sortToLow(socarPrices),
-        ...sortToLow(rompetrolInfo),
-        ...sortToLow(wissolPrices),
-        ...sortToLow(gulfInfo),
-      ];
+      return sortToLowByBrands({
+        portal: portalInfo,
+        socar: socarPrices,
+        rompetrol: rompetrolInfo,
+        wissol: wissolPrices,
+        gulf: gulfInfo,
+      });
     }
     return [];
   }, [
@@ -163,15 +169,24 @@ const FuelInfoScreen: React.FC = () => {
     [],
   );
 
-  const renderItem = ({item}: {item: FuelBulletType}) => {
-    return (
-      <FuelPriceBullet
-        {...item}
-        customStyle={styles.customStyle}
-        customTitle={styles.customTitle}
-      />
-    );
-  };
+  const renderItem = useCallback(
+    ({item}: {item: FuelBulletType}) => {
+      if (
+        sortType?.key === 'brand-low-price' ||
+        sortType?.key === 'brand-high-price'
+      ) {
+        return <FuelCompanyBullet {...item} />;
+      }
+      return (
+        <FuelPriceBullet
+          {...item}
+          customStyle={styles.customStyle}
+          customTitle={styles.customTitle}
+        />
+      );
+    },
+    [sortType],
+  );
 
   const viewConfig = useRef({viewAreaCoveragePercentThreshold: 50}).current;
 
@@ -284,6 +299,11 @@ const FuelInfoScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
         bounces={false}
         style={{height: height}}
+        contentContainerStyle={Platform.select({
+          ios: {paddingBottom: insets.bottom},
+          android: {paddingBottom: insets.bottom},
+          default: {},
+        })}
         scrollEventThrottle={16}
         viewabilityConfig={viewConfig}
         ListHeaderComponent={ListHeaderComponent}
