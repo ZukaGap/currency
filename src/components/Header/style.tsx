@@ -21,6 +21,7 @@ const getStyleObj = () => {
       fontSize: sizes.h1,
       color: colors.purple,
       marginRight: sizes.xxs,
+      marginLeft: sizes.s,
     },
     lightTitle: {
       fontFamily: fonts.MontserratSemiBold,

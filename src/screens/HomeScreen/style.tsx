@@ -13,11 +13,11 @@ const getStyleObj = (insets: EdgeInsets) => {
       flex: 1,
       backgroundColor: colors.purple01,
       // paddingHorizontal: 16,
-      ...Platform.select({
-        // ios: {paddingTop: insets.top, paddingBottom: insets.bottom},
-        // android: {paddingTop: insets.top, paddingBottom: insets.bottom},
-        default: {},
-      }),
+      // ...Platform.select({
+      //   // ios: {paddingTop: insets.top, paddingBottom: insets.bottom},
+      //   // android: {paddingTop: insets.top, paddingBottom: insets.bottom},
+      //   default: {},
+      // }),
     },
     subTitle: {
       fontSize: sizes.h5,
@@ -30,7 +30,7 @@ const getStyleObj = (insets: EdgeInsets) => {
     header: {
       ...Platform.select({
         ios: {
-          paddingTop: insets.top,
+          // paddingTop: insets.top,
           paddingBottom: sizes.m,
         },
         android: {

@@ -60,7 +60,7 @@ const Routes: React.FC = () => {
           name="fuelInfoScreen"
           component={FuelInfoScreen}
           options={{
-            headerShown: true,
+            headerShown: false,
             title: '',
             headerTitleAlign: 'center',
             headerTitleStyle: {color: colors.purple},

@@ -22,7 +22,7 @@ import {
   socarFuelInfoAtom,
   wissolFuelInfoAtom,
 } from 'store/atom/getAtom';
-import {FuelPriceBullet} from 'components';
+import {DrawerWrapper, FuelPriceBullet} from 'components';
 import {FuelBulletType} from 'components/FuelPriceBullet';
 import getRompetrolInfo from 'utils/websiteParsers/rompetrolParser';
 import {
@@ -33,10 +33,11 @@ import {
 import {sortToHigh, sortToLow} from 'utils/sort';
 
 import getStyleObj from './style';
-import {Back, Filter} from 'assets/SVG';
+import {Back, Drawer, Filter} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
 import getGulfInfo from 'utils/websiteParsers/gulfFuelParser';
+import {FlashList} from '@shopify/flash-list';
 
 interface FilterType {
   name: string;
@@ -64,8 +65,8 @@ const filterType: FilterType[] = [
 
 const FuelInfoScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const {goBack, setOptions} = useNavigation();
   const {height} = useWindowDimensions();
+  const drawerRef = useRef(null);
   const styles = getStyleObj(insets);
   const modalizeRef = useRef<Modalize>(null);
   const [portalInfo, setPortalInfo] = useRecoilState(sendPortalFuelInfoAtom);
@@ -157,31 +158,12 @@ const FuelInfoScreen: React.FC = () => {
     } catch (err) {}
   };
 
-  useEffect(() => {
-    setOptions({
-      title: 'საწვავის ფასები',
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => {
-            goBack();
-          }}>
-          <Back width={sizes.is} height={sizes.is} fill={colors.purple03} />
-        </TouchableOpacity>
-      ),
-      headerRight: () => (
-        <TouchableOpacity onPress={onOpen}>
-          <Filter width={sizes.is} height={sizes.is} fill={colors.purple} />
-        </TouchableOpacity>
-      ),
-    });
-  }, []);
-
   const keyExtractor = useCallback(
     (item: FuelBulletType) => item?.company + item?.name + item?.price,
     [],
   );
 
-  const renderItem: ListRenderItem<FuelBulletType> = ({item}) => {
+  const renderItem = ({item}: {item: FuelBulletType}) => {
     return (
       <FuelPriceBullet
         {...item}
@@ -268,10 +250,36 @@ const FuelInfoScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.safeAreaWrapper}>
-      <FlatList
+    <DrawerWrapper ref={drawerRef}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginHorizontal: 24,
+          marginBottom: 16,
+        }}>
+        <TouchableOpacity
+          onPress={() => {
+            drawerRef?.current.openDrawer();
+          }}>
+          <Drawer width={sizes.is} height={sizes.is} fill={colors.purple} />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 16,
+            textAlign: 'center',
+            color: colors.purple,
+          }}>
+          {'საწვავის ფასები'}
+        </Text>
+        <TouchableOpacity onPress={onOpen}>
+          <Filter width={sizes.is} height={sizes.is} fill={colors.purple} />
+        </TouchableOpacity>
+      </View>
+      <FlashList
         data={listData}
         renderItem={renderItem}
+        estimatedItemSize={70}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
         bounces={false}
@@ -311,7 +319,7 @@ const FuelInfoScreen: React.FC = () => {
           </View>
         </Modalize>
       </Portal>
-    </SafeAreaView>
+    </DrawerWrapper>
   );
 };
 
