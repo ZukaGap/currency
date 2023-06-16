@@ -9,7 +9,7 @@ const getStyleObj = (insets: EdgeInsets) => {
   return StyleSheet.create({
     safeAreaWrapper: {
       flex: 1,
-      backgroundColor: colors.grey00,
+      backgroundColor: colors.purple01,
       paddingHorizontal: 16,
       ...Platform.select({
         android: {
