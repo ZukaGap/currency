@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import {
   REACT_NATIVE_API_ROOT_DEV,
   REACT_NATIVE_API_ROOT_PROD,
@@ -72,7 +72,7 @@ export const fetchConvertedCurrency = async (
   codeTo: string,
   quantity: string,
   callBack: (value: string) => void,
-) => {
+): Promise<AxiosResponse> => {
   try {
     const response = await axios.get(
       `${API_URL}/currencies/calculator/?codeFrom=${codeFrom}&codeTo=${codeTo}&quantity=${quantity}`,
@@ -80,7 +80,7 @@ export const fetchConvertedCurrency = async (
     callBack(String(response?.data.toFixed(4)));
     return response?.data;
   } catch (err) {
-    return 0;
+    return;
   }
 };
 
@@ -127,7 +127,7 @@ export const fetchWissolFuelInfo = async (): Promise<FuelInfoType[]> => {
 };
 
 export const fetchSocarFuelInfo = async (): Promise<FuelInfoType[]> => {
-  const response = await axios.get(
+  const response = await axios.get<AxiosResponse>(
     `https://prod-api.sgp.ge/api/v1/fuels/prices`,
   );
 
@@ -147,7 +147,9 @@ export const fetchSocarFuelInfo = async (): Promise<FuelInfoType[]> => {
 // https://www.rompetrol.ge/#pricelist
 export const fetchRompetrolFuelInfo = async () => {
   try {
-    const response = await axios.get('https://www.rompetrol.ge/#pricelist');
+    const response = await axios.get<AxiosResponse>(
+      'https://www.rompetrol.ge/#pricelist',
+    );
 
     return response.data;
   } catch (err) {}
