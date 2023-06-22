@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Toggle Button Test renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "marginVertical": 5,
+    }
+  }
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "fontSize": 18,
+          "fontWeight": "600",
+        },
+        Object {
+          "color": "#FFFFFF",
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      Object {
+        "flexGrow": 1,
+      }
+    }
+  />
+  <RNCSegmentedControl
+    enabled={true}
+    onChange={[Function]}
+    onValueChange={[Function]}
+    selectedIndex={1}
+    style={
+      Array [
+        Object {
+          "height": 32,
+        },
+        Object {
+          "marginLeft": 10,
+          "width": 140,
+        },
+      ]
+    }
+    values={
+      Array [
+        "yes",
+        "no",
+      ]
+    }
+  />
+</View>
+`;
