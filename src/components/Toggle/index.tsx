@@ -1,7 +1,9 @@
-import SegmentedControl from '@react-native-segmented-control/segmented-control';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {useColors} from 'hooks/useColor';
+import {Text, View} from 'react-native';
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
+
+import getStyleObj from './style';
+import {colors} from 'styles/colors';
 
 interface Props {
   title: string;
@@ -9,14 +11,16 @@ interface Props {
   setIsEnabled: (isEnabled: boolean) => void;
 }
 
-export default function Toggle({title, isEnabled, setIsEnabled}: Props) {
-  const colors = useColors();
+export default function Toggle({
+  title,
+  isEnabled,
+  setIsEnabled = () => {},
+}: Props) {
+  const styles = getStyleObj();
 
   return (
     <View style={styles.row}>
-      <Text style={[styles.toggleText, {color: colors.foreground}]}>
-        {title}
-      </Text>
+      <Text style={[styles.toggleText, {color: colors.white}]}>{title}</Text>
 
       <View style={styles.spacer} />
 
@@ -29,22 +33,3 @@ export default function Toggle({title, isEnabled, setIsEnabled}: Props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  spacer: {
-    flexGrow: 1,
-  },
-  toggleText: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  segmentedControl: {
-    marginLeft: 10,
-    width: 140,
-  },
-});
