@@ -5,11 +5,11 @@ import {
   moderateScale,
   verticalScale,
 } from 'replacers/scalling';
-import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 
 import {colors} from 'styles/colors';
 import {fonts} from 'styles/fonts';
 import {sizes} from 'styles/sizes';
+import {generateBoxShadowStyle} from 'utils/generateBoxShadow';
 
 const getStyleObj = (insets: EdgeInsets) => {
   return StyleSheet.create({
@@ -83,6 +83,28 @@ const getStyleObj = (insets: EdgeInsets) => {
       transform: [{scaleX: 1}],
       marginTop: 4,
     },
+    bottomPad: {paddingBottom: 600},
+    wrapper: {
+      borderTopEndRadius: 32,
+      borderTopStartRadius: 32,
+      ...generateBoxShadowStyle(
+        0,
+        -3,
+        colors.Purple600,
+        0.3,
+        3.05,
+        4,
+        '#7e3af24D',
+      ),
+    },
+    flatList: {
+      paddingTop: 8,
+      backgroundColor: colors.purple03,
+      borderTopEndRadius: 32,
+      borderTopStartRadius: 32,
+    },
+    customStyle: {backgroundColor: colors.transparent},
+    customTitle: {color: colors.white},
   });
 };
 

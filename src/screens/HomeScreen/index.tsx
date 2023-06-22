@@ -1,9 +1,9 @@
 import React, {useCallback, useRef} from 'react';
-import {ActivityIndicator, ListRenderItem, View, Animated} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilValue} from 'recoil';
 import {useNavigation} from '@react-navigation/native';
-import {FlashList, FlashListProps} from '@shopify/flash-list';
+import {FlashList} from '@shopify/flash-list';
 
 import {currenciesAtom} from 'store/atom/getAtom';
 import {CurrencyBullet, Header, DrawerWrapper} from 'components';
@@ -53,6 +53,7 @@ const HomeScreen: React.FC = () => {
           bounces={false}
           scrollEventThrottle={16}
           viewabilityConfig={viewConfig}
+          contentContainerStyle={styles.bottomPad}
           ListEmptyComponent={() => (
             <View>
               <ActivityIndicator size={'large'} color={colors.purple03} />

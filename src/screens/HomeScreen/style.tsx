@@ -58,6 +58,7 @@ const getStyleObj = (insets: EdgeInsets) => {
       ),
     },
     customTitle: {color: colors.white},
+    bottomPad: {paddingBottom: 100},
   });
 };
 

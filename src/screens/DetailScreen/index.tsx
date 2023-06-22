@@ -42,9 +42,7 @@ export const DetailScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
   const {params} = useRoute();
-  const {width, height} = useWindowDimensions();
   const {setOptions, goBack} = useNavigation();
-  const calcHeight = Math.min(width, height) / 2;
   const {code, rate, name, validFromDate}: CurrenciesType = params || {};
   const currencySymbol = useMemo(() => getSymbolFromCurrency(code), [code]);
   const [graphPoints, setGraphPoints] = useState<GraphPoint[]>([]);

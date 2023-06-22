@@ -1,5 +1,6 @@
 import {Platform, StyleSheet} from 'react-native';
 import {EdgeInsets} from 'react-native-safe-area-context';
+import {moderateScale, verticalScale} from 'replacers/scalling';
 import {colors} from 'styles/colors';
 import {sizes} from 'styles/sizes';
 import {generateBoxShadowStyle} from 'utils/generateBoxShadow';
@@ -35,6 +36,24 @@ const getStyleObj = (insets: EdgeInsets) => {
       ),
     },
     customTitle: {color: colors.white},
+    bottomPad: {paddingBottom: 100},
+    title: {
+      fontSize: 16,
+      textAlign: 'center',
+      color: colors.purple,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginHorizontal: 24,
+      marginBottom: 16,
+    },
+    sortT: {
+      textAlign: 'center',
+      marginBottom: verticalScale(sizes.m),
+      fontSize: moderateScale(sizes.h4),
+      color: colors.purple,
+    },
   });
 };
 

@@ -1,17 +1,13 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   ActivityIndicator,
-  FlatList,
-  ListRenderItem,
-  Platform,
   Text,
   TouchableOpacity,
   View,
   useWindowDimensions,
 } from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import {useNavigation} from '@react-navigation/native';
 import {Portal} from 'react-native-portalize';
 import {Modalize} from 'react-native-modalize';
 
@@ -39,7 +35,7 @@ import {
 } from 'utils/sort';
 
 import getStyleObj from './style';
-import {Back, Drawer, Filter} from 'assets/SVG';
+import {Drawer, Filter} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
 import getGulfInfo from 'utils/websiteParsers/gulfFuelParser';
@@ -266,27 +262,14 @@ const FuelInfoScreen: React.FC = () => {
 
   return (
     <DrawerWrapper ref={drawerRef}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginHorizontal: 24,
-          marginBottom: 16,
-        }}>
+      <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
             drawerRef?.current.openDrawer();
           }}>
           <Drawer width={sizes.is} height={sizes.is} fill={colors.purple} />
         </TouchableOpacity>
-        <Text
-          style={{
-            fontSize: 16,
-            textAlign: 'center',
-            color: colors.purple,
-          }}>
-          {'საწვავის ფასები'}
-        </Text>
+        <Text style={styles.title}>{'საწვავის ფასები'}</Text>
         <TouchableOpacity onPress={onOpen}>
           <Filter width={sizes.is} height={sizes.is} fill={colors.purple} />
         </TouchableOpacity>
@@ -299,11 +282,7 @@ const FuelInfoScreen: React.FC = () => {
         showsVerticalScrollIndicator={false}
         bounces={false}
         style={{height: height}}
-        contentContainerStyle={Platform.select({
-          ios: {paddingBottom: insets.bottom},
-          android: {paddingBottom: insets.bottom},
-          default: {},
-        })}
+        contentContainerStyle={styles.bottomPad}
         scrollEventThrottle={16}
         viewabilityConfig={viewConfig}
         ListHeaderComponent={ListHeaderComponent}
@@ -326,15 +305,7 @@ const FuelInfoScreen: React.FC = () => {
               paddingBottom: verticalScale(sizes.lxx + insets.bottom),
               paddingHorizontal: horizontalScale(sizes.lx),
             }}>
-            <Text
-              style={{
-                textAlign: 'center',
-                marginBottom: verticalScale(sizes.m),
-                fontSize: moderateScale(sizes.h4),
-                color: colors.purple,
-              }}>
-              დალაგება
-            </Text>
+            <Text style={styles.sortT}>დალაგება</Text>
             {RenderSort()}
           </View>
         </Modalize>

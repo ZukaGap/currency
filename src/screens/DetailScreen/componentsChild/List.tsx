@@ -1,12 +1,6 @@
 import React, {memo, useCallback} from 'react';
 import {CurrenciesType} from 'config/Axios/getAPI';
-import {
-  ActivityIndicator,
-  ListRenderItem,
-  View,
-  FlatList,
-  StyleSheet,
-} from 'react-native';
+import {ActivityIndicator, ListRenderItem, View, FlatList} from 'react-native';
 import {useRecoilValue} from 'recoil';
 
 import {currenciesAtom} from 'store/atom/getAtom';
@@ -16,8 +10,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {generateBoxShadowStyle} from 'utils/generateBoxShadow';
 
+import getStyleObj from '../style';
+
 const List = () => {
   const insets = useSafeAreaInsets();
+  const styles = getStyleObj(insets);
   const {push} = useNavigation();
   const {data} = useRecoilValue(currenciesAtom);
   const renderItem: ListRenderItem<CurrenciesType> = ({item}) => {
@@ -40,11 +37,9 @@ const List = () => {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: insets.bottom,
-        }}
         bounces={false}
         scrollEventThrottle={16}
+        contentContainerStyle={styles.bottomPad}
         ListEmptyComponent={() => (
           <View>
             <ActivityIndicator size={'large'} color={colors.purple03} />
@@ -54,29 +49,5 @@ const List = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  wrapper: {
-    borderTopEndRadius: 32,
-    borderTopStartRadius: 32,
-    ...generateBoxShadowStyle(
-      0,
-      -3,
-      colors.Purple600,
-      0.3,
-      3.05,
-      4,
-      '#7e3af24D',
-    ),
-  },
-  flatList: {
-    paddingTop: 8,
-    backgroundColor: colors.purple03,
-    borderTopEndRadius: 32,
-    borderTopStartRadius: 32,
-  },
-  customStyle: {backgroundColor: colors.transparent},
-  customTitle: {color: colors.white},
-});
 
 export default memo(List);
