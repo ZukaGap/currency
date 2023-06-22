@@ -18,6 +18,7 @@ import Animated, {
   FadeInRight,
   interpolate,
   useAnimatedGestureHandler,
+  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -31,9 +32,6 @@ import {
 } from 'types/drawerWrapperTypes';
 
 import getStyleObj from './style';
-import {colors} from 'styles/colors';
-import {sizes} from 'styles/sizes';
-import {fonts} from 'styles/fonts';
 
 const {width: SCREEN_WIDTH} = Dimensions.get('screen');
 
@@ -60,6 +58,12 @@ const DrawerWrapper: ForwardRefRenderFunction<
   const insets = useSafeAreaInsets();
   const route = useRoute();
   const {replace} = useNavigation();
+  const animatedProps = useAnimatedProps(() => {
+    const pointerEvents = translateX.value === 0 ? 'auto' : 'none';
+    return {
+      pointerEvents,
+    };
+  }, [translateX.value]);
 
   const panGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -189,7 +193,9 @@ const DrawerWrapper: ForwardRefRenderFunction<
         <Animated.View
           entering={FadeInRight.delay(100).stiffness(50)}
           style={[styles.root, childrenAnimStyle]}>
-          {children}
+          <Animated.View {...{animatedProps}} style={[styles.root]}>
+            {children}
+          </Animated.View>
         </Animated.View>
       </PanGestureHandler>
     </View>
