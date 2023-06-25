@@ -8,7 +8,6 @@ import {colors} from 'styles/colors';
 import {CurrencyBullet} from 'components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
-import {generateBoxShadowStyle} from 'utils/generateBoxShadow';
 
 import getStyleObj from '../style';
 

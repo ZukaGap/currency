@@ -96,6 +96,7 @@ const getStyleObj = (insets: EdgeInsets) => {
         4,
         '#7e3af24D',
       ),
+      overflow: 'hidden',
     },
     flatList: {
       paddingTop: 8,

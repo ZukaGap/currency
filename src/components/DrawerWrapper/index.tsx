@@ -168,54 +168,54 @@ const DrawerWrapper: ForwardRefRenderFunction<
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={closeDrawer}>
-      <View style={styles.container}>
-        <StatusBar
-          animated={true}
-          translucent={true}
-          backgroundColor="transparent"
-        />
-        <Animated.View style={[styles.drawerWrapper, menuStyle]}>
-          <Text style={styles.name}>M-Economizer</Text>
-          <View style={styles.drawerContent}>
-            <View style={styles.screensWrapper}>
-              {TABS?.map(item => (
-                <TouchableOpacity
-                  disabled={item?.key === route?.name}
-                  onPress={() => {
-                    replace(item.key);
-                  }}>
-                  <View
+    <TouchableWithoutFeedback onPress={closeDrawer} style={styles.container}>
+      {/* <View style={styles.container}> */}
+      <StatusBar
+        animated={true}
+        translucent={true}
+        backgroundColor="transparent"
+      />
+      <Animated.View style={[styles.drawerWrapper, menuStyle]}>
+        <Text style={styles.name}>M-Economizer</Text>
+        <View style={styles.drawerContent}>
+          <View style={styles.screensWrapper}>
+            {TABS?.map(item => (
+              <TouchableOpacity
+                disabled={item?.key === route?.name}
+                onPress={() => {
+                  replace(item.key);
+                }}>
+                <View
+                  style={[
+                    styles.screenBTN,
+                    item.key === route?.name && styles.screenBTNActive,
+                  ]}>
+                  <Text
                     style={[
-                      styles.screenBTN,
-                      item.key === route?.name && styles.screenBTNActive,
+                      styles.screensTitle,
+                      item?.key === route?.name && styles.screensTitleActive,
                     ]}>
-                    <Text
-                      style={[
-                        styles.screensTitle,
-                        item?.key === route?.name && styles.screensTitleActive,
-                      ]}>
-                      {item?.name}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
+                    {item?.name}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
-        </Animated.View>
-        <PanGestureHandler
-          onGestureEvent={panGestureEvent}
-          failOffsetY={[-5, 5]}
-          activeOffsetX={[-5, 5]}>
-          <Animated.View
-            entering={FadeInRight.delay(100).stiffness(50)}
-            style={[styles.root, childrenAnimStyle]}>
-            <Animated.View {...{animatedProps}} style={[styles.root]}>
-              {children}
-            </Animated.View>
+        </View>
+      </Animated.View>
+      <PanGestureHandler
+        onGestureEvent={panGestureEvent}
+        failOffsetY={[-5, 5]}
+        activeOffsetX={[-5, 5]}>
+        <Animated.View
+          entering={FadeInRight.delay(100).stiffness(50)}
+          style={[styles.root, childrenAnimStyle]}>
+          <Animated.View {...{animatedProps}} style={[styles.root]}>
+            {children}
           </Animated.View>
-        </PanGestureHandler>
-      </View>
+        </Animated.View>
+      </PanGestureHandler>
+      {/* </View> */}
     </TouchableWithoutFeedback>
   );
 };
