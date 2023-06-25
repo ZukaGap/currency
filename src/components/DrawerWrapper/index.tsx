@@ -3,13 +3,13 @@ import React, {
   forwardRef,
   useCallback,
   useImperativeHandle,
-  useMemo,
 } from 'react';
-import {Dimensions, Text, View} from 'react-native';
+import {Dimensions, StatusBar, Text, View} from 'react-native';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from 'react-native-gesture-handler';
 import Animated, {
   Easing,
@@ -146,6 +146,7 @@ const DrawerWrapper: ForwardRefRenderFunction<
   }));
 
   const onPress = useCallback(() => {
+    'worklet';
     if (translateX.value > 0) {
       translateX.value = withTiming(0);
     } else {
@@ -159,46 +160,63 @@ const DrawerWrapper: ForwardRefRenderFunction<
     },
   }));
 
+  const closeDrawer = useCallback(() => {
+    'worklet';
+    if (translateX.value > 0) {
+      translateX.value = withTiming(0);
+    }
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.drawerWrapper, menuStyle]}>
-        <Text style={styles.name}>M-Economizer</Text>
-        <View style={styles.drawerContent}>
-          <View style={styles.screensWrapper}>
-            {TABS?.map(item => (
-              <TouchableOpacity
-                disabled={item?.key === route?.name}
-                onPress={() => {
-                  replace(item.key);
-                }}>
-                <View
-                  style={[
-                    styles.screenBTN,
-                    item.key === route?.name && styles.screenBTNActive,
-                  ]}>
-                  <Text
+    <TouchableWithoutFeedback onPress={closeDrawer}>
+      <View style={styles.container}>
+        <StatusBar
+          animated={true}
+          translucent={true}
+          backgroundColor="transparent"
+        />
+        <Animated.View style={[styles.drawerWrapper, menuStyle]}>
+          <Text style={styles.name}>M-Economizer</Text>
+          <View style={styles.drawerContent}>
+            <View style={styles.screensWrapper}>
+              {TABS?.map(item => (
+                <TouchableOpacity
+                  disabled={item?.key === route?.name}
+                  onPress={() => {
+                    replace(item.key);
+                  }}>
+                  <View
                     style={[
-                      styles.screensTitle,
-                      item?.key === route?.name && styles.screensTitleActive,
+                      styles.screenBTN,
+                      item.key === route?.name && styles.screenBTNActive,
                     ]}>
-                    {item?.name}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ))}
+                    <Text
+                      style={[
+                        styles.screensTitle,
+                        item?.key === route?.name && styles.screensTitleActive,
+                      ]}>
+                      {item?.name}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
           </View>
-        </View>
-      </Animated.View>
-      <PanGestureHandler onGestureEvent={panGestureEvent}>
-        <Animated.View
-          entering={FadeInRight.delay(100).stiffness(50)}
-          style={[styles.root, childrenAnimStyle]}>
-          <Animated.View {...{animatedProps}} style={[styles.root]}>
-            {children}
-          </Animated.View>
         </Animated.View>
-      </PanGestureHandler>
-    </View>
+        <PanGestureHandler
+          onGestureEvent={panGestureEvent}
+          failOffsetY={[-5, 5]}
+          activeOffsetX={[-5, 5]}>
+          <Animated.View
+            entering={FadeInRight.delay(100).stiffness(50)}
+            style={[styles.root, childrenAnimStyle]}>
+            <Animated.View {...{animatedProps}} style={[styles.root]}>
+              {children}
+            </Animated.View>
+          </Animated.View>
+        </PanGestureHandler>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
