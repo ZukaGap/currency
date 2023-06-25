@@ -2,9 +2,10 @@ import React, {
   ForwardRefRenderFunction,
   forwardRef,
   useCallback,
+  useEffect,
   useImperativeHandle,
 } from 'react';
-import {Dimensions, StatusBar, Text, View} from 'react-native';
+import {BackHandler, Dimensions, StatusBar, Text, View} from 'react-native';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -165,6 +166,22 @@ const DrawerWrapper: ForwardRefRenderFunction<
     if (translateX.value > 0) {
       translateX.value = withTiming(0);
     }
+  }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (translateX.value > 0) {
+          translateX.value = withTiming(0);
+          return true;
+        } else {
+          return false;
+        }
+      },
+    );
+
+    return () => backHandler.remove();
   }, []);
 
   return (
