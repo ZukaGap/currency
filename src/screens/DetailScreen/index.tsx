@@ -11,7 +11,7 @@ import TabSwitchButton from 'components/TabSwitchButton';
 import List from './componentsChild/List';
 
 import {colors} from 'styles/colors';
-import {Back} from 'assets/SVG';
+import {Back, Calculator} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import getStyleObj from './style';
 
@@ -42,6 +42,7 @@ export const DetailScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
   const {params} = useRoute();
+  const {navigate} = useNavigation();
   const {setOptions, goBack} = useNavigation();
   const {code, rate, name, validFromDate}: CurrenciesType = params || {};
   const currencySymbol = useMemo(() => getSymbolFromCurrency(code), [code]);
@@ -101,8 +102,21 @@ export const DetailScreen: React.FC = () => {
           <Back width={sizes.is} height={sizes.is} fill={colors.purple03} />
         </TouchableOpacity>
       ),
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            navigate('calculatorScreen', {
+              receive: {
+                code,
+                name,
+              },
+            });
+          }}>
+          <Calculator width={sizes.im} height={sizes.im} fill={colors.purple} />
+        </TouchableOpacity>
+      ),
     });
-  }, []);
+  }, [code, name]);
 
   return (
     <View style={styles.safeAreaWrapper}>

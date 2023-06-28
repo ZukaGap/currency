@@ -14,7 +14,7 @@ import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Modalize, useModalize} from 'react-native-modalize';
 import {Portal} from 'react-native-portalize';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import getSymbolFromCurrency from 'currency-symbol-map';
 
 import {
@@ -46,6 +46,7 @@ const CalculatorScreen: React.FC = () => {
   const {ref, open, close} = useModalize();
   const {setOptions, goBack} = useNavigation();
   const [openedTab, setOpenedTab] = useState('');
+  const {params} = useRoute();
 
   const {data} = useRecoilValue(currencyCodesAtom);
 
@@ -65,6 +66,15 @@ const CalculatorScreen: React.FC = () => {
     value: '',
     step: 'converted',
   });
+
+  useEffect(() => {
+    if (params?.receive) {
+      setReceiveCurrency({
+        code: params?.receive?.code,
+        name: params?.receive?.name,
+      });
+    }
+  }, [params]);
 
   useEffect(() => {
     setSendValue({value: '', step: 'converted'});
