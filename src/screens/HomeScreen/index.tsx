@@ -34,6 +34,8 @@ const HomeScreen: React.FC = () => {
     );
   };
 
+  console.log(data);
+
   return (
     <DrawerWrapper ref={drawerRef}>
       <View style={styles.header}>
