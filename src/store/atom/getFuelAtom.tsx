@@ -101,3 +101,8 @@ export const socarFuelInfoAtom = atom<SocarInfoType>({
     },
   ],
 });
+
+export const sendLukoilInfoAtom = atom<FuelInfoType[]>({
+  key: 'sendLukoilFuelInfoAtom',
+  default: [],
+});

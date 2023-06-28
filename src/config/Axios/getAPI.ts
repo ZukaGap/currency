@@ -109,6 +109,14 @@ export const fetchPortalFuelInfo = async () => {
   } catch (err) {}
 };
 
+export const fetchLukoilFuelInfo = async () => {
+  try {
+    const response = await axios.get('http://www.lukoil.ge/');
+
+    return response.data;
+  } catch (err) {}
+};
+
 export const fetchWissolFuelInfo = async (): Promise<FuelInfoType[]> => {
   const response = await axios.get(
     `http://wissol.ge/adminarea/api/ajaxapi/get_fuel_prices?lang=GEO`,

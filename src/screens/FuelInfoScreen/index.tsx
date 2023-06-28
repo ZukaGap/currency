@@ -18,6 +18,7 @@ import {
   sendRompetrolFuelInfoAtom,
   socarFuelInfoAtom,
   wissolFuelInfoAtom,
+  sendLukoilInfoAtom,
 } from 'store/atom/getFuelAtom';
 import {DrawerWrapper, FuelCompanyBullet, FuelPriceBullet} from 'components';
 import {FuelBulletType} from 'components/FuelPriceBullet';
@@ -40,6 +41,7 @@ import {sizes} from 'styles/sizes';
 import {colors} from 'styles/colors';
 import getGulfInfo from 'utils/websiteParsers/gulfFuelParser';
 import {FlashList} from '@shopify/flash-list';
+import getLukoilInfo from 'utils/websiteParsers/lukoilFuelParser';
 
 interface FilterType {
   name: string;
@@ -77,9 +79,11 @@ const FuelInfoScreen: React.FC = () => {
   );
   const {socarPrices, isLoadingSocarInfo} = useRecoilValue(socarFuelInfoAtom);
   const [gulfInfo, setGulfInfo] = useRecoilState(sendGulfFuelInfoAtom);
+  const [lukoilInfo, setLukoilInfo] = useRecoilState(sendLukoilInfoAtom);
   const [isLoadingPortalInfo, setIsLoadingPortalInfo] = useState(false);
   const [isLoadingRompetrolInfo, setIsLoadingRompetrolInfo] = useState(false);
   const [isLoadingGulflInfo, setIsLoadingGulfInfo] = useState(false);
+  const [isLoadingLukoilInfo, setIsLoadingLukoilInfo] = useState(false);
   const {wissolPrices, isLoadingWissolInfo} =
     useRecoilValue(wissolFuelInfoAtom);
   const [sortType, setSortType] = useState<FilterType>(filterType[0]);
@@ -91,6 +95,7 @@ const FuelInfoScreen: React.FC = () => {
         ...rompetrolInfo,
         ...wissolPrices,
         ...gulfInfo,
+        ...lukoilInfo,
       ]);
     } else if (sortType?.key === 'high-price') {
       return sortToLow([
@@ -99,6 +104,7 @@ const FuelInfoScreen: React.FC = () => {
         ...rompetrolInfo,
         ...wissolPrices,
         ...gulfInfo,
+        ...lukoilInfo,
       ]);
     } else if (sortType?.key === 'brand-low-price') {
       return sortToHighByBrands({
@@ -107,6 +113,7 @@ const FuelInfoScreen: React.FC = () => {
         rompetrol: rompetrolInfo,
         wissol: wissolPrices,
         gulf: gulfInfo,
+        lukoil: lukoilInfo,
       });
     } else if (sortType?.key === 'brand-high-price') {
       return sortToLowByBrands({
@@ -115,6 +122,7 @@ const FuelInfoScreen: React.FC = () => {
         rompetrol: rompetrolInfo,
         wissol: wissolPrices,
         gulf: gulfInfo,
+        lukoil: lukoilInfo,
       });
     }
     return [];
@@ -125,40 +133,51 @@ const FuelInfoScreen: React.FC = () => {
     socarPrices,
     sortType,
     gulfInfo,
+    lukoilInfo,
   ]);
 
   useEffect(() => {
     getPortalFuelInfo();
     getRompetrolFuelInfo();
     getGulfFuelInfo();
+    getLukoilFuelInfo();
   }, []);
 
-  const getPortalFuelInfo = async () => {
+  const getPortalFuelInfo = useCallback(async () => {
     try {
       setIsLoadingPortalInfo(true);
       let respPortal = await getPortalInfo();
       setPortalInfo(respPortal);
       setIsLoadingPortalInfo(false);
     } catch (err) {}
-  };
+  }, []);
 
-  const getRompetrolFuelInfo = async () => {
+  const getRompetrolFuelInfo = useCallback(async () => {
     try {
       setIsLoadingRompetrolInfo(true);
       let respRompetrol = await getRompetrolInfo();
       setRompetrolInfo(respRompetrol);
       setIsLoadingRompetrolInfo(false);
     } catch (err) {}
-  };
+  }, []);
 
-  const getGulfFuelInfo = async () => {
+  const getGulfFuelInfo = useCallback(async () => {
     try {
       setIsLoadingGulfInfo(true);
       let respGulf = await getGulfInfo();
       setGulfInfo(respGulf);
       setIsLoadingGulfInfo(false);
     } catch (err) {}
-  };
+  }, []);
+
+  const getLukoilFuelInfo = useCallback(async () => {
+    try {
+      setIsLoadingLukoilInfo(true);
+      let respLukoil = await getLukoilInfo();
+      setLukoilInfo(respLukoil);
+      setIsLoadingLukoilInfo(false);
+    } catch (err) {}
+  }, []);
 
   const keyExtractor = useCallback(
     (item: FuelBulletType) => item?.company + item?.name + item?.price,
@@ -222,7 +241,8 @@ const FuelInfoScreen: React.FC = () => {
       isLoadingWissolInfo ||
       isLoadingPortalInfo ||
       isLoadingRompetrolInfo ||
-      isLoadingGulflInfo ? (
+      isLoadingGulflInfo ||
+      isLoadingLukoilInfo ? (
         <View style={{marginBottom: sizes.s}}>
           <ActivityIndicator size={'large'} color={colors.purple03} />
         </View>
@@ -235,6 +255,7 @@ const FuelInfoScreen: React.FC = () => {
       isLoadingRompetrolInfo,
       isLoadingSocarInfo,
       isLoadingWissolInfo,
+      isLoadingLukoilInfo,
     ],
   );
 
@@ -244,7 +265,8 @@ const FuelInfoScreen: React.FC = () => {
       !isLoadingWissolInfo ||
       !isLoadingPortalInfo ||
       !isLoadingRompetrolInfo ||
-      !isLoadingGulflInfo ? (
+      !isLoadingGulflInfo ||
+      !isLoadingLukoilInfo ? (
         <View>
           <ActivityIndicator size={'large'} color={colors.purple03} />
         </View>
@@ -257,6 +279,7 @@ const FuelInfoScreen: React.FC = () => {
       isLoadingRompetrolInfo,
       isLoadingSocarInfo,
       isLoadingWissolInfo,
+      isLoadingLukoilInfo,
     ],
   );
 

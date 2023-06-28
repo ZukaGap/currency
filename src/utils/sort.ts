@@ -17,6 +17,7 @@ interface FuelCompanies {
   rompetrol: FuelBulletType;
   wissol: FuelBulletType;
   gulf: FuelBulletType;
+  lukoil: FuelBulletType;
 }
 
 const filterPriceName = company => {
@@ -32,6 +33,7 @@ export const sortToHighByBrands = ({
   rompetrol,
   wissol,
   gulf,
+  lukoil,
 }: FuelCompanies): CompanyFuelBulletType[] => {
   // return newArray?.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
   const sortedSocar = {
@@ -54,8 +56,19 @@ export const sortToHighByBrands = ({
     company: 'Gulf',
     priceList: filterPriceName(sortToHigh(gulf)),
   };
+  const sortedLukoil = {
+    company: 'Lukoil',
+    priceList: filterPriceName(sortToHigh(lukoil)),
+  };
 
-  return [sortedSocar, sortedPortal, sortedRompetrol, sortedWissol, sortedGulf];
+  return [
+    sortedSocar,
+    sortedPortal,
+    sortedRompetrol,
+    sortedWissol,
+    sortedGulf,
+    sortedLukoil,
+  ];
 };
 
 export const sortToLowByBrands = ({
@@ -64,6 +77,7 @@ export const sortToLowByBrands = ({
   rompetrol,
   wissol,
   gulf,
+  lukoil,
 }: FuelCompanies): CompanyFuelBulletType[] => {
   // return newArray?.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
   const sortedSocar = {
@@ -85,6 +99,10 @@ export const sortToLowByBrands = ({
   const sortedGulf = {
     company: 'Gulf',
     priceList: filterPriceName(sortToLow(gulf)),
+  };
+  const sortedLukoil = {
+    company: 'Lukoil',
+    priceList: filterPriceName(sortToLow(lukoil)),
   };
 
   return [sortedSocar, sortedPortal, sortedRompetrol, sortedWissol, sortedGulf];
