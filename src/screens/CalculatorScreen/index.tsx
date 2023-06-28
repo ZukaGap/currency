@@ -21,7 +21,7 @@ import {
   currencyCodesAtom,
   receiveCurrencyAtom,
   sendCurrencyAtom,
-} from 'store/atom/getAtom';
+} from 'store/atom/getCurrencyAtom';
 import {CurrencyCodesType, fetchConvertedCurrency} from 'config/Axios/getAPI';
 
 import getStyleObj from './style';

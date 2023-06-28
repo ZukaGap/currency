@@ -3,7 +3,7 @@ import {CurrenciesType} from 'config/Axios/getAPI';
 import {ActivityIndicator, ListRenderItem, View, FlatList} from 'react-native';
 import {useRecoilValue} from 'recoil';
 
-import {currenciesAtom} from 'store/atom/getAtom';
+import {currenciesAtom} from 'store/atom/getCurrencyAtom';
 import {colors} from 'styles/colors';
 import {CurrencyBullet} from 'components';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';

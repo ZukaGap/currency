@@ -5,7 +5,7 @@ import {useRecoilValue} from 'recoil';
 import {useNavigation} from '@react-navigation/native';
 import {FlashList} from '@shopify/flash-list';
 
-import {currenciesAtom} from 'store/atom/getAtom';
+import {currenciesAtom} from 'store/atom/getCurrencyAtom';
 import {CurrencyBullet, Header, DrawerWrapper} from 'components';
 import {CurrenciesType} from 'config/Axios/getAPI';
 

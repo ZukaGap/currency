@@ -18,7 +18,7 @@ import {
   sendRompetrolFuelInfoAtom,
   socarFuelInfoAtom,
   wissolFuelInfoAtom,
-} from 'store/atom/getAtom';
+} from 'store/atom/getFuelAtom';
 import {DrawerWrapper, FuelCompanyBullet, FuelPriceBullet} from 'components';
 import {FuelBulletType} from 'components/FuelPriceBullet';
 import getRompetrolInfo from 'utils/websiteParsers/rompetrolParser';
