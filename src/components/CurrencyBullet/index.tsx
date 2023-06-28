@@ -39,7 +39,7 @@ const CurrencyBullet: React.FC<
       </View>
       <View style={[styles.col]}>
         <Text style={[styles.title, customTitle]}>{rateFormated}</Text>
-        <Text style={[styles.title, diff >= 0 ? styles.green : styles.red]}>
+        <Text style={[styles.title, diff <= 0 ? styles.green : styles.red]}>
           {diffFormated}
         </Text>
       </View>
