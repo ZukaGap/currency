@@ -27,6 +27,7 @@ const Routes: React.FC = () => {
             fontSize: 16,
           },
           headerBackButtonMenuEnabled: false,
+          presentation: 'fullScreenModal',
         })}
         initialRouteName={'homeScreen'}>
         <Screen
