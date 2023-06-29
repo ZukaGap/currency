@@ -1,4 +1,4 @@
-import React, {memo, useCallback} from 'react';
+import React, {memo, useCallback, useMemo} from 'react';
 import {
   ActivityIndicator,
   ListRenderItem,
@@ -26,6 +26,16 @@ const List = ({code}: ListType) => {
   const styles = getStyleObj(insets);
   const {push} = useNavigation();
   const {data} = useRecoilValue(currenciesAtom);
+
+  const memorizedData = useMemo(
+    () => [
+      ...data?.BOG?.filter(item => item?.code === code),
+      ...data?.TBC?.filter(item => item?.code === code),
+      ...data?.Valuto?.filter(item => item?.code === code),
+    ],
+    [data, code],
+  );
+
   const renderItem: ListRenderItem<CurrenciesType> = ({item}) => {
     return (
       <View style={styles.currencyItem}>
@@ -33,7 +43,7 @@ const List = ({code}: ListType) => {
         <Text
           style={
             styles.currencyHeaderT
-          }>{`${item?.quantity} ${item?.name}`}</Text>
+          }>{`${item?.quantity} ${item?.code}`}</Text>
         <View style={styles.bodyView}>
           <View style={styles.symbolView}>
             <Text
@@ -63,14 +73,15 @@ const List = ({code}: ListType) => {
   };
   const keyExtractor = useCallback((item: CurrenciesType) => item?.name, []);
 
+  if (memorizedData?.length === 0) {
+    return;
+  }
+
   return (
     <View style={styles.wrapper}>
       <FlatList
         style={styles.flatList}
-        data={[
-          ...data?.BOG?.filter(item => item?.code === code),
-          ...data?.TBC?.filter(item => item?.code === code),
-        ]}
+        data={memorizedData}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}

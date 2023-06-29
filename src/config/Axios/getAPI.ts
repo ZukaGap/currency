@@ -109,6 +109,36 @@ export const fetchTBCCurrencies = async (): Promise<CurrenciesType[]> => {
   }));
 };
 
+export const fetchValutoCurrencies = async (): Promise<CurrenciesType[]> => {
+  const response = await axios.get(
+    `https://valuto.ge/wp-json/rest-currency-list/v3/currencies`,
+  );
+  const valutoArr = [
+    response?.data?.data?.currencies?.USDGEL,
+    response?.data?.data?.currencies?.EURGEL,
+    response?.data?.data?.currencies?.GBPGEL,
+    response?.data?.data?.currencies?.TRYGEL,
+    response?.data?.data?.currencies?.AZNGEL,
+    response?.data?.data?.currencies?.RURGEL,
+    response?.data?.data?.currencies?.AMDGEL,
+  ];
+
+  return valutoArr.map(item => ({
+    code: item?.CcFrom,
+    quantity: 1,
+    rateFormated: 0,
+    diffFormated: 0,
+    rate: 0,
+    name: item?.CcFrom,
+    diff: 0,
+    date: new Date(),
+    validFromDate: new Date(),
+    bank: 'Valuto',
+    buyRate: item?.buy,
+    sellRate: item?.sell,
+  }));
+};
+
 export const fetchCurrencyCodes = async (): Promise<CurrencyCodesType[]> => {
   const response = await axios.get(`${API_URL}/currencies/codes`);
   return response?.data;

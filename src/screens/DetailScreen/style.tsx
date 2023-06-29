@@ -141,7 +141,7 @@ const getStyleObj = (insets: EdgeInsets) => {
       alignItems: 'center',
     },
     bodyView: {
-      marginTop: 8,
+      // marginTop: 8,
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',

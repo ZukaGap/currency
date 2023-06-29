@@ -6,6 +6,7 @@ import {
   CurrencyCodesType,
   fetchBOGCurrencies,
   fetchTBCCurrencies,
+  fetchValutoCurrencies,
 } from 'config/Axios/getAPI';
 
 interface CurrenciesStateType {
@@ -13,6 +14,7 @@ interface CurrenciesStateType {
     NBG: CurrenciesType[];
     BOG: CurrenciesType[];
     TBC: CurrenciesType[];
+    Valuto: CurrenciesType[];
   };
   isLoading: boolean;
   error: string | null;
@@ -27,7 +29,7 @@ interface CurrencyCodesStateType {
 export const currenciesAtom = atom<CurrenciesStateType>({
   key: 'currenciesAtom',
   default: {
-    data: {NBG: [], BOG: [], TBC: []},
+    data: {NBG: [], BOG: [], TBC: [], Valuto: []},
     isLoading: false,
     error: null,
   },
@@ -35,7 +37,7 @@ export const currenciesAtom = atom<CurrenciesStateType>({
     ({setSelf}) => {
       const fetchData = async () => {
         setSelf(() => ({
-          data: {NBG: [], BOG: [], TBC: []},
+          data: {NBG: [], BOG: [], TBC: [], Valuto: []},
           isLoading: true,
           error: null,
         }));
@@ -43,20 +45,21 @@ export const currenciesAtom = atom<CurrenciesStateType>({
           const responseNBG = await fetchCurrencies(new Date());
           const responseBOG = await fetchBOGCurrencies();
           const responseTBC = await fetchTBCCurrencies();
-          console.log(responseTBC);
+          const responseValuto = await fetchValutoCurrencies();
 
           setSelf(() => ({
             data: {
               NBG: responseNBG,
               BOG: responseBOG,
               TBC: responseTBC,
+              Valuto: responseValuto,
             },
             isLoading: false,
             error: null,
           }));
         } catch (error: any) {
           setSelf(() => ({
-            data: {NBG: [], BOG: [], TBC: []},
+            data: {NBG: [], BOG: [], TBC: [], Valuto: []},
             isLoading: false,
             error: error,
           }));
