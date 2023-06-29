@@ -67,7 +67,10 @@ const List = ({code}: ListType) => {
     <View style={styles.wrapper}>
       <FlatList
         style={styles.flatList}
-        data={data?.BOG?.filter(item => item?.code === code)}
+        data={[
+          ...data?.BOG?.filter(item => item?.code === code),
+          ...data?.TBC?.filter(item => item?.code === code),
+        ]}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}

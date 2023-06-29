@@ -88,6 +88,27 @@ export const fetchBOGCurrencies = async (): Promise<CurrenciesType[]> => {
   }));
 };
 
+export const fetchTBCCurrencies = async (): Promise<CurrenciesType[]> => {
+  const response = await axios.get(
+    `https://api.tbcbank.ge/v1/exchange-rates/commercial?currency`,
+    {headers: {apikey: 'h6ZxP3C4WuuE7s2hj0PdiOSJA9QX2KEU'}},
+  );
+  return response?.data?.commercialRatesList.map(item => ({
+    code: item?.currency,
+    quantity: 1,
+    rateFormated: 0,
+    diffFormated: 0,
+    rate: 0,
+    name: item?.currency,
+    diff: 0,
+    date: new Date(),
+    validFromDate: new Date(),
+    bank: 'TBC',
+    buyRate: item?.buy,
+    sellRate: item?.sell,
+  }));
+};
+
 export const fetchCurrencyCodes = async (): Promise<CurrencyCodesType[]> => {
   const response = await axios.get(`${API_URL}/currencies/codes`);
   return response?.data;
