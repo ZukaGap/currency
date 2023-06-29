@@ -21,6 +21,9 @@ export interface CurrenciesType {
   diff: number;
   date: Date;
   validFromDate: Date;
+  buyRate?: number;
+  sellRate?: number;
+  bank: string;
 }
 
 export interface CurrencyCodesType {
@@ -59,7 +62,30 @@ export const fetchCurrencies = async (
       'yyyy-MM-dd',
     )}`,
   );
-  return response?.data?.[0]?.currencies;
+  return response?.data?.[0]?.currencies.map(item => ({
+    ...item,
+    bank: 'NBG',
+  }));
+};
+
+export const fetchBOGCurrencies = async (): Promise<CurrenciesType[]> => {
+  const response = await axios.get(
+    `https://bankofgeorgia.ge/api/currencies/getCurrenciesList/pages/5c0a361ff85d2d574073cf30`,
+  );
+  return response?.data?.data.map(item => ({
+    code: item?.ccy,
+    quantity: item?.rateWeight,
+    rateFormated: item?.currentRate,
+    diffFormated: item?.difference,
+    rate: Number(item?.currentRate),
+    name: item?.name,
+    diff: Number(item?.difference),
+    date: new Date(),
+    validFromDate: new Date(),
+    bank: 'BOG',
+    buyRate: item?.dgtlBuyRate,
+    sellRate: item?.dgtlSellRate,
+  }));
 };
 
 export const fetchCurrencyCodes = async (): Promise<CurrencyCodesType[]> => {

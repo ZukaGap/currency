@@ -4,10 +4,14 @@ import {
   CurrenciesType,
   fetchCurrencyCodes,
   CurrencyCodesType,
+  fetchBOGCurrencies,
 } from 'config/Axios/getAPI';
 
 interface CurrenciesStateType {
-  data: CurrenciesType[];
+  data: {
+    NBG: CurrenciesType[];
+    BOG: CurrenciesType[];
+  };
   isLoading: boolean;
   error: string | null;
 }
@@ -21,23 +25,36 @@ interface CurrencyCodesStateType {
 export const currenciesAtom = atom<CurrenciesStateType>({
   key: 'currenciesAtom',
   default: {
-    data: [],
+    data: {NBG: [], BOG: []},
     isLoading: false,
     error: null,
   },
   effects: [
     ({setSelf}) => {
       const fetchData = async () => {
-        setSelf(() => ({data: [], isLoading: true, error: null}));
+        setSelf(() => ({
+          data: {NBG: [], BOG: []},
+          isLoading: true,
+          error: null,
+        }));
         try {
-          const response = await fetchCurrencies(new Date());
+          const responseNBG = await fetchCurrencies(new Date());
+          const responseBOG = await fetchBOGCurrencies();
+
           setSelf(() => ({
-            data: response,
+            data: {
+              NBG: responseNBG,
+              BOG: responseBOG,
+            },
             isLoading: false,
             error: null,
           }));
         } catch (error: any) {
-          setSelf(() => ({data: [], isLoading: false, error: error}));
+          setSelf(() => ({
+            data: {NBG: [], BOG: []},
+            isLoading: false,
+            error: error,
+          }));
         }
       };
       fetchData();

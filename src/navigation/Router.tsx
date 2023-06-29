@@ -27,7 +27,6 @@ const Routes: React.FC = () => {
             fontSize: 16,
           },
           headerBackButtonMenuEnabled: false,
-          presentation: 'fullScreenModal',
         })}
         initialRouteName={'homeScreen'}>
         <Screen
@@ -45,6 +44,7 @@ const Routes: React.FC = () => {
             title: '',
             headerTitleAlign: 'center',
             headerTitleStyle: {color: colors.purple},
+            presentation: 'formSheet',
           }}
         />
         <Screen
@@ -55,6 +55,7 @@ const Routes: React.FC = () => {
             title: 'Convert',
             headerTitleAlign: 'center',
             headerTitleStyle: {color: colors.purple},
+            presentation: 'fullScreenModal',
           }}
         />
         <Screen

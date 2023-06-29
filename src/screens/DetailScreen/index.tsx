@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {View, useWindowDimensions, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Platform} from 'react-native';
+import {useRecoilValue} from 'recoil';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {GraphPoint, LineGraph} from 'react-native-graph';
 import {CurrenciesType, fetchCurrencyDetails} from 'config/Axios/getAPI';
@@ -94,14 +95,18 @@ export const DetailScreen: React.FC = () => {
 
     setOptions({
       title: name,
-      headerLeft: () => (
-        <TouchableOpacity
-          onPress={() => {
-            goBack();
-          }}>
-          <Back width={sizes.is} height={sizes.is} fill={colors.purple03} />
-        </TouchableOpacity>
-      ),
+      headerLeft: () =>
+        Platform.select({
+          ios: <View />,
+          default: (
+            <TouchableOpacity
+              onPress={() => {
+                goBack();
+              }}>
+              <Back width={sizes.is} height={sizes.is} fill={colors.purple03} />
+            </TouchableOpacity>
+          ),
+        }),
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {

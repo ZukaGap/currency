@@ -32,7 +32,7 @@ const List = () => {
     <View style={styles.wrapper}>
       <FlatList
         style={styles.flatList}
-        data={data}
+        data={data?.NBG}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}

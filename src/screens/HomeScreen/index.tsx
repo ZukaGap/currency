@@ -21,7 +21,10 @@ const HomeScreen: React.FC = () => {
 
   const {data} = useRecoilValue(currenciesAtom);
 
-  const keyExtractor = useCallback((item: CurrenciesType) => item?.name, []);
+  const keyExtractor = useCallback(
+    (item: CurrenciesType) => `item_${item?.code}`,
+    [],
+  );
 
   const renderItem = ({item}: {item: CurrenciesType}) => {
     return (
@@ -45,7 +48,7 @@ const HomeScreen: React.FC = () => {
       </View>
       <View style={styles.safeAreaWrapper}>
         <FlashList
-          data={data}
+          data={data?.NBG}
           renderItem={renderItem}
           estimatedItemSize={70}
           keyExtractor={keyExtractor}
