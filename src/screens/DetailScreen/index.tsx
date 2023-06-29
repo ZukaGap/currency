@@ -144,7 +144,7 @@ export const DetailScreen: React.FC = () => {
         onPointSelected={priceTitle}
         onGestureEnd={priceTitle}
       />
-      <View style={{paddingHorizontal: 16, paddingBottom: 16}}>
+      <View style={{paddingHorizontal: 16, paddingBottom: 8}}>
         <TabSwitchButton
           tabData={graphsData}
           onChange={(item, index) => {
@@ -152,7 +152,7 @@ export const DetailScreen: React.FC = () => {
           }}
         />
       </View>
-      <List />
+      <List code={code} />
     </View>
   );
 };
