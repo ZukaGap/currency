@@ -83,10 +83,10 @@ const getStyleObj = (insets: EdgeInsets) => {
       transform: [{scaleX: 1}],
       marginTop: 4,
     },
-    bottomPad: {paddingBottom: 600},
+    bottomPad: {paddingBottom: 550},
     flatList: {
-      marginTop: 8,
-      paddingTop: 8,
+      // marginTop: 8,
+      // paddingTop: 8,
       backgroundColor: colors.purple03,
     },
     wrapper: {
@@ -117,7 +117,7 @@ const getStyleObj = (insets: EdgeInsets) => {
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      width: '100%',
+      flex: 1,
     },
     currencyItem: {
       padding: 12,
@@ -125,6 +125,7 @@ const getStyleObj = (insets: EdgeInsets) => {
       backgroundColor: 'white',
       borderRadius: 12,
       margin: 8,
+      marginBottom: 0,
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'flex-start',
@@ -135,7 +136,6 @@ const getStyleObj = (insets: EdgeInsets) => {
       color: '#272727',
     },
     symbolView: {
-      marginTop: 16,
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
@@ -145,6 +145,7 @@ const getStyleObj = (insets: EdgeInsets) => {
       flexDirection: 'row',
       justifyContent: 'flex-start',
       alignItems: 'center',
+      width: '100%',
     },
     currencyInfo: {
       flexDirection: 'row',

@@ -59,11 +59,15 @@ const List = ({code}: ListType) => {
             <View style={styles.currencyInfo}>
               <View style={styles.halfSize}>
                 <Text style={styles.smallText}>ყიდვა</Text>
-                <Text style={styles.rateText}>{item?.buyRate}</Text>
+                <Text style={styles.rateText} numberOfLines={1}>
+                  {item?.buyRate?.toFixed(4)}
+                </Text>
               </View>
               <View style={styles.halfSize}>
                 <Text style={styles.smallText}>გაყიდვა</Text>
-                <Text style={styles.rateText}>{item?.sellRate}</Text>
+                <Text style={styles.rateText} numberOfLines={1}>
+                  {item?.sellRate?.toFixed(4)}
+                </Text>
               </View>
             </View>
           </View>
@@ -86,7 +90,7 @@ const List = ({code}: ListType) => {
         keyExtractor={keyExtractor}
         showsVerticalScrollIndicator={false}
         bounces={false}
-        scrollEventThrottle={16}
+        scrollEventThrottle={8}
         contentContainerStyle={styles.bottomPad}
         ListEmptyComponent={() => (
           <View>
