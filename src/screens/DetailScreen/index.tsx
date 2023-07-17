@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {View, Text, TouchableOpacity, Platform} from 'react-native';
-import {useRecoilValue} from 'recoil';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {GraphPoint, LineGraph} from 'react-native-graph';
 import {CurrenciesType, fetchCurrencyDetails} from 'config/Axios/getAPI';

@@ -1,4 +1,4 @@
-import {Platform, StyleSheet} from 'react-native';
+import {Dimensions, Platform, StyleSheet} from 'react-native';
 import {EdgeInsets} from 'react-native-safe-area-context';
 import {
   horizontalScale,
@@ -10,6 +10,8 @@ import {colors} from 'styles/colors';
 import {fonts} from 'styles/fonts';
 import {sizes} from 'styles/sizes';
 import {generateBoxShadowStyle} from 'utils/generateBoxShadow';
+
+const {width, height} = Dimensions.get('window');
 
 const getStyleObj = (insets: EdgeInsets) => {
   return StyleSheet.create({
@@ -60,8 +62,8 @@ const getStyleObj = (insets: EdgeInsets) => {
     },
     graph: {
       alignSelf: 'center',
-      width: '90%',
-      aspectRatio: 1.2,
+      width: horizontalScale(300),
+      aspectRatio: 1.8,
       marginVertical: 20,
       transform: [{scaleX: -1}],
     },
@@ -83,13 +85,14 @@ const getStyleObj = (insets: EdgeInsets) => {
       transform: [{scaleX: 1}],
       marginTop: 4,
     },
-    bottomPad: {paddingBottom: 550},
+    bottomPad: {paddingBottom: insets.bottom || 8},
     flatList: {
       // marginTop: 8,
       // paddingTop: 8,
       backgroundColor: colors.purple03,
     },
     wrapper: {
+      flex: 1,
       borderTopEndRadius: 16,
       borderTopStartRadius: 16,
       overflow: 'hidden',
