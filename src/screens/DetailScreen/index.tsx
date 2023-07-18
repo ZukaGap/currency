@@ -94,18 +94,14 @@ export const DetailScreen: React.FC = () => {
 
     setOptions({
       title: name,
-      headerLeft: () =>
-        Platform.select({
-          ios: <View />,
-          default: (
-            <TouchableOpacity
-              onPress={() => {
-                goBack();
-              }}>
-              <Back width={sizes.is} height={sizes.is} fill={colors.purple03} />
-            </TouchableOpacity>
-          ),
-        }),
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => {
+            goBack();
+          }}>
+          <Back width={sizes.is} height={sizes.is} fill={colors.purple03} />
+        </TouchableOpacity>
+      ),
       headerRight: () => (
         <TouchableOpacity
           onPress={() => {

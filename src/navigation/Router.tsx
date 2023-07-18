@@ -44,7 +44,7 @@ const Routes: React.FC = () => {
             title: '',
             headerTitleAlign: 'center',
             headerTitleStyle: {color: colors.purple},
-            presentation: 'formSheet',
+            // presentation: 'formSheet',
           }}
         />
         <Screen
@@ -55,7 +55,6 @@ const Routes: React.FC = () => {
             title: 'Convert',
             headerTitleAlign: 'center',
             headerTitleStyle: {color: colors.purple},
-            presentation: 'fullScreenModal',
           }}
         />
         <Screen
