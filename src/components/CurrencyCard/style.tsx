@@ -1,4 +1,5 @@
-import {StyleSheet, Platform} from 'react-native';
+import {StyleSheet} from 'react-native';
+import {colors} from '../../styles/colors';
 
 const getStyleObj = () => {
   return StyleSheet.create({
@@ -6,30 +7,35 @@ const getStyleObj = () => {
       height: 60,
       padding: 8,
       borderRadius: 8,
-      //borderWidth: 1,
+      borderWidth: 0.5,
+      borderColor: colors.grey,
       margin: 8,
       flexDirection: 'row',
       //overflow: 'hidden',
       //shadow
-      elevation: 4,
-      backgroundColor: 'white',
-      shadowColor: 'black',
-      shadowOpacity: 0.25,
-      shadowOffset: {width: 0, height: 2},
-      shadowRadius: 8,
-      overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
+      // elevation: 4,
+      backgroundColor: colors.white,
+      // shadowColor: 'black',
+      // shadowOpacity: 0.15,
+      // shadowOffset: {width: 0, height: 2},
+      // shadowRadius: 8,
+      // overflow: Platform.OS === 'android' ? 'hidden' : 'visible',
     },
     flagContainer: {
-      height: '100%',
-      width: 40,
+      marginHorizontal: 4,
+      //height: 'auto',
+      width: 30,
       //backgroundColor: "red",
       alignItems: 'center',
       justifyContent: 'center',
+      //borderRadius: 16,
+      overflow: 'hidden',
     },
     diffContainer: {
-      flex: 1,
+      //flex: 1,
       alignItems: 'flex-end',
       justifyContent: 'center',
+      marginHorizontal: 4,
     },
     infoContainer: {
       flex: 1,
@@ -37,6 +43,7 @@ const getStyleObj = () => {
     },
     rateText: {
       textAlign: 'center',
+      color: colors.black,
     },
   });
 };

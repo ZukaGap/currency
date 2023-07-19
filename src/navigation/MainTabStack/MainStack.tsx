@@ -19,13 +19,14 @@ export default function MainStack() {
         tabBarInactiveTintColor: colors.purple02,
         unmountOnBlur: true,
         freezeOnBlur: true,
+        tabBarShowLabel: false,
       }}
       initialRouteName="homeStack">
       <Screen
         name="homeStack"
         component={HomeStack}
         options={{
-          tabBarLabel: 'Home',
+          //tabBarLabel: 'Home',
           unmountOnBlur: true,
           headerShown: false,
           tabBarIcon: ({color, size}) => <Home width={size} fill={color} />,
@@ -35,7 +36,7 @@ export default function MainStack() {
         name="converterStack"
         component={ConverterStack}
         options={{
-          tabBarLabel: 'Converter',
+          //tabBarLabel: 'Converter',
           unmountOnBlur: true,
           headerShown: false,
           tabBarIcon: ({color, size}) => <Swap width={size} fill={color} />,

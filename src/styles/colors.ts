@@ -9,5 +9,7 @@ export const enum colors {
   purple03 = '#BFABD7',
   black = '#212121',
   green = '#26A46F',
+  red = '#E74F4E',
   grey = '#C4C4C4',
+  white = '#FEFEFE',
 }

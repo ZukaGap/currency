@@ -1,12 +1,20 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {ActivityIndicator} from 'react-native';
+
+
+import { useSafeAreaInsets} from 'react-native-safe-area-context';
+
+import SafeAreaView from 'react-native-safe-area-view';
+
+
 import axios from 'axios';
 
 import getStyleObj from './style';
 import { ScrollView } from 'react-native-gesture-handler';
 import CurrencyCard from '../../components/CurrencyCard';
+import { colors } from '../../styles/colors';
 
 const HomeScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -32,11 +40,13 @@ const HomeScreen: React.FC = () => {
 
   return (
     <SafeAreaView style={[styles.safeAreaWrapper]}>
-      <ScrollView >
-        <View>
-          {!isLoading && fetchedData[0].currencies.map((currency: any) => <CurrencyCard code={currency.code} quantity={currency.quantity} rate={currency.rate} diff={currency.diff}/>)}
-        </View>
-      </ScrollView>
+      {isLoading ? (
+        <ActivityIndicator style={{ flex: 1 }} size="large" color={colors.purple} />
+      ) : (
+        <ScrollView>
+          {fetchedData[0].currencies.map((currency: any) => <CurrencyCard code={currency.code} quantity={currency.quantity} rate={currency.rate} diff={currency.diff}/>)}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
