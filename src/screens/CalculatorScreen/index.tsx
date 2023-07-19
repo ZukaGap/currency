@@ -8,6 +8,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -47,7 +48,7 @@ const CalculatorScreen: React.FC = () => {
   const {setOptions, goBack} = useNavigation();
   const [openedTab, setOpenedTab] = useState('');
   const {params} = useRoute();
-
+  const receiveRef = useRef(null);
   const {data} = useRecoilValue(currencyCodesAtom);
 
   const [sendCurrency, setSendCurrency] = useRecoilState(sendCurrencyAtom);
@@ -179,14 +180,22 @@ const CalculatorScreen: React.FC = () => {
         <View style={styles.send}>
           <Text style={styles.title}>Send</Text>
           <View style={styles.inputView}>
-            <TextInput
-              style={styles.input}
-              numberOfLines={1}
-              keyboardType={'numeric'}
-              inputAccessoryViewID={inputAccessoryViewID}
-              value={sendValue.value}
-              onChangeText={value => setSendValue({value, step: 'changed'})}
-            />
+            <TouchableWithoutFeedback
+              hitSlop={{
+                bottom: 20,
+                top: 12,
+                left: 16,
+                right: 40,
+              }}>
+              <TextInput
+                style={styles.input}
+                numberOfLines={1}
+                keyboardType={'numeric'}
+                inputAccessoryViewID={inputAccessoryViewID}
+                value={sendValue.value}
+                onChangeText={value => setSendValue({value, step: 'changed'})}
+              />
+            </TouchableWithoutFeedback>
             <TouchableOpacity
               onPress={() => sheetOpenHandle('send')}
               style={styles.dropDown}>
@@ -209,14 +218,24 @@ const CalculatorScreen: React.FC = () => {
         <View style={styles.receive}>
           <Text style={styles.title}>Receive</Text>
           <View style={styles.inputView}>
-            <TextInput
-              style={styles.input}
-              numberOfLines={1}
-              keyboardType={'numeric'}
-              inputAccessoryViewID={inputAccessoryViewID}
-              value={receiveValue.value}
-              onChangeText={value => setReceiveValue({value, step: 'changed'})}
-            />
+            <TouchableWithoutFeedback
+              hitSlop={{
+                bottom: 20,
+                top: 12,
+                left: 40,
+                right: 40,
+              }}>
+              <TextInput
+                style={styles.input}
+                numberOfLines={1}
+                keyboardType={'numeric'}
+                inputAccessoryViewID={inputAccessoryViewID}
+                value={receiveValue.value}
+                onChangeText={value =>
+                  setReceiveValue({value, step: 'changed'})
+                }
+              />
+            </TouchableWithoutFeedback>
             <TouchableOpacity
               onPress={() => sheetOpenHandle('receive')}
               style={styles.dropDown}>
