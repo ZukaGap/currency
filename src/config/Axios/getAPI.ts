@@ -3,6 +3,15 @@ import {
   REACT_NATIVE_API_ROOT_DEV,
   REACT_NATIVE_API_ROOT_PROD,
   REACT_NATIVE_API_MODE,
+  REACT_NATIVE_API_PORTAL,
+  REACT_NATIVE_API_BOG,
+  REACT_NATIVE_API_TBC,
+  REACT_NATIVE_API_VALUTO,
+  REACT_NATIVE_API_LUKOIL,
+  REACT_NATIVE_API_WISSOL,
+  REACT_NATIVE_API_SOCAR,
+  REACT_NATIVE_API_ROMPETROL,
+  REACT_NATIVE_API_GULF,
 } from '@env';
 import {format} from 'date-fns';
 
@@ -70,7 +79,7 @@ export const fetchCurrencies = async (
 
 export const fetchBOGCurrencies = async (): Promise<CurrenciesType[]> => {
   const response = await axios.get(
-    `https://bankofgeorgia.ge/api/currencies/getCurrenciesList/pages/5c0a361ff85d2d574073cf30`,
+    `${REACT_NATIVE_API_BOG}/currencies/getCurrenciesList/pages/5c0a361ff85d2d574073cf30`,
   );
   return response?.data?.data.map(item => ({
     code: item?.ccy,
@@ -90,7 +99,7 @@ export const fetchBOGCurrencies = async (): Promise<CurrenciesType[]> => {
 
 export const fetchTBCCurrencies = async (): Promise<CurrenciesType[]> => {
   const response = await axios.get(
-    `https://api.tbcbank.ge/v1/exchange-rates/commercial?currency`,
+    `${REACT_NATIVE_API_TBC}/exchange-rates/commercial?currency`,
     {headers: {apikey: 'h6ZxP3C4WuuE7s2hj0PdiOSJA9QX2KEU'}},
   );
   return response?.data?.commercialRatesList.map(item => ({
@@ -111,7 +120,7 @@ export const fetchTBCCurrencies = async (): Promise<CurrenciesType[]> => {
 
 export const fetchValutoCurrencies = async (): Promise<CurrenciesType[]> => {
   const response = await axios.get(
-    `https://valuto.ge/wp-json/rest-currency-list/v3/currencies`,
+    `${REACT_NATIVE_API_VALUTO}/rest-currency-list/v3/currencies`,
   );
   const valutoArr = [
     response?.data?.data?.currencies?.USDGEL,
@@ -180,7 +189,9 @@ export const fetchCurrencyDetails = async (
 
 export const fetchPortalFuelInfo = async () => {
   try {
-    const response = await axios.get('https://portal.com.ge/georgian/newfuel');
+    const response = await axios.get(
+      `${REACT_NATIVE_API_PORTAL}/georgian/newfuel`,
+    );
 
     return response.data;
   } catch (err) {}
@@ -188,7 +199,7 @@ export const fetchPortalFuelInfo = async () => {
 
 export const fetchLukoilFuelInfo = async () => {
   try {
-    const response = await axios.get('http://www.lukoil.ge/');
+    const response = await axios.get(REACT_NATIVE_API_LUKOIL);
 
     return response.data;
   } catch (err) {}
@@ -196,7 +207,7 @@ export const fetchLukoilFuelInfo = async () => {
 
 export const fetchWissolFuelInfo = async (): Promise<FuelInfoType[]> => {
   const response = await axios.get(
-    `http://wissol.ge/adminarea/api/ajaxapi/get_fuel_prices?lang=GEO`,
+    `${REACT_NATIVE_API_WISSOL}/get_fuel_prices?lang=GEO`,
   );
   const data: FuelInfoType[] = response?.data?.map(item => {
     return {
@@ -213,7 +224,7 @@ export const fetchWissolFuelInfo = async (): Promise<FuelInfoType[]> => {
 
 export const fetchSocarFuelInfo = async (): Promise<FuelInfoType[]> => {
   const response = await axios.get<AxiosResponse>(
-    `https://prod-api.sgp.ge/api/v1/fuels/prices`,
+    `${REACT_NATIVE_API_SOCAR}/fuels/prices`,
   );
 
   const data: FuelInfoType[] = response?.data?.data?.map(item => {
@@ -229,21 +240,19 @@ export const fetchSocarFuelInfo = async (): Promise<FuelInfoType[]> => {
   return data;
 };
 
-// https://www.rompetrol.ge/#pricelist
 export const fetchRompetrolFuelInfo = async () => {
   try {
     const response = await axios.get<AxiosResponse>(
-      'https://www.rompetrol.ge/#pricelist',
+      `${REACT_NATIVE_API_ROMPETROL}/#pricelist`,
     );
 
     return response.data;
   } catch (err) {}
 };
 
-// https://gulf.ge/
 export const fetchGulfFuelInfo = async () => {
   try {
-    const response = await axios.get('https://gulf.ge/');
+    const response = await axios.get(REACT_NATIVE_API_GULF);
 
     return response.data;
   } catch (err) {}
