@@ -1,8 +1,9 @@
 import React, {useMemo} from 'react';
 import {StyleProp, Text, View, ViewStyle} from 'react-native';
+import FastImage from 'react-native-fast-image';
+import {useTranslation} from 'react-i18next';
 
 import getStyleObj from './style';
-import FastImage from 'react-native-fast-image';
 
 export interface FuelBulletType {
   name: string;
@@ -20,6 +21,7 @@ const FuelPriceBullet: React.FC<FuelBulletType> = ({
   customTitle,
 }) => {
   const styles = getStyleObj();
+  const {t} = useTranslation();
   const IMG_PATH = useMemo(() => {
     switch (company) {
       case 'Wissol':
@@ -54,7 +56,9 @@ const FuelPriceBullet: React.FC<FuelBulletType> = ({
         <Text style={[styles.title, customTitle]}>{name}</Text>
       </View>
       <View style={[styles.col]}>
-        <Text style={[styles.title, customTitle]}>ფასი</Text>
+        <Text style={[styles.title, customTitle]}>
+          {t('screens.fuel.price')}
+        </Text>
         <Text style={[styles.title, customTitle]}>{price}</Text>
       </View>
     </View>

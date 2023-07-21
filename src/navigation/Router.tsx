@@ -6,9 +6,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from 'screens/HomeScreen';
 import CalculatorScreen from 'screens/CalculatorScreen';
 import FuelInfoScreen from 'screens/FuelInfoScreen';
+import DetailScreen from 'screens/DetailScreen';
+import SettingsScreen from 'screens/SettingsScreen';
 
 import {colors} from 'styles/colors';
-import {DetailScreen} from 'screens/DetailScreen';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 
@@ -60,6 +61,16 @@ const Routes: React.FC = () => {
         <Screen
           name="fuelInfoScreen"
           component={FuelInfoScreen}
+          options={{
+            headerShown: false,
+            title: '',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {color: colors.purple},
+          }}
+        />
+        <Screen
+          name="settingsScreen"
+          component={SettingsScreen}
           options={{
             headerShown: false,
             title: '',

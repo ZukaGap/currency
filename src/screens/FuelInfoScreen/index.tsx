@@ -10,6 +10,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {Portal} from 'react-native-portalize';
 import {Modalize} from 'react-native-modalize';
+import {useTranslation} from 'react-i18next';
 
 import getPortalInfo from 'utils/websiteParsers/portalFuel';
 import {
@@ -48,31 +49,34 @@ interface FilterType {
   key: string;
 }
 
-const filterType: FilterType[] = [
-  {
-    name: 'ფასი ზრდადი',
-    key: 'low-price',
-  },
-  {
-    name: 'ფასი კლებადი',
-    key: 'high-price',
-  },
-  {
-    name: 'ბრენდები + ზრდადი',
-    key: 'brand-low-price',
-  },
-  {
-    name: 'ბრენდები + კლებადი',
-    key: 'brand-high-price',
-  },
-];
-
 const FuelInfoScreen: React.FC = () => {
+  const {t} = useTranslation();
   const insets = useSafeAreaInsets();
   const {height} = useWindowDimensions();
   const drawerRef = useRef(null);
   const styles = getStyleObj(insets);
   const modalizeRef = useRef<Modalize>(null);
+  const filterType = useMemo<FilterType[]>(() => {
+    return [
+      {
+        name: t('screens.fuelInfo.lowPrice'),
+        key: 'low-price',
+      },
+      {
+        name: t('screens.fuelInfo.highPrice'),
+        key: 'high-price',
+      },
+      {
+        name: t('screens.fuelInfo.brandLowPrice'),
+        key: 'brand-low-price',
+      },
+      {
+        name: t('screens.fuelInfo.brandHighPrice'),
+        key: 'brand-high-price',
+      },
+    ];
+  }, [t]);
+
   const [portalInfo, setPortalInfo] = useRecoilState(sendPortalFuelInfoAtom);
   const [rompetrolInfo, setRompetrolInfo] = useRecoilState(
     sendRompetrolFuelInfoAtom,
@@ -292,7 +296,7 @@ const FuelInfoScreen: React.FC = () => {
           }}>
           <Drawer width={sizes.is} height={sizes.is} fill={colors.purple} />
         </TouchableOpacity>
-        <Text style={styles.title}>{'საწვავის ფასები'}</Text>
+        <Text style={styles.title}>{t('screens.fuelInfo.petrolPrice')}</Text>
         <TouchableOpacity onPress={onOpen}>
           <Filter width={sizes.is} height={sizes.is} fill={colors.purple} />
         </TouchableOpacity>
@@ -328,7 +332,7 @@ const FuelInfoScreen: React.FC = () => {
               paddingBottom: verticalScale(sizes.lxx + insets.bottom),
               paddingHorizontal: horizontalScale(sizes.lx),
             }}>
-            <Text style={styles.sortT}>დალაგება</Text>
+            <Text style={styles.sortT}>{t('screens.fuelInfo.sort')}</Text>
             {RenderSort()}
           </View>
         </Modalize>

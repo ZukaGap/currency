@@ -1,11 +1,12 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {View, Text, TouchableOpacity, Platform} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {GraphPoint, LineGraph} from 'react-native-graph';
 import {CurrenciesType, fetchCurrencyDetails} from 'config/Axios/getAPI';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {format, subMonths, subWeeks} from 'date-fns';
 import getSymbolFromCurrency from 'currency-symbol-map';
+import {useTranslation} from 'react-i18next';
 
 import TabSwitchButton from 'components/TabSwitchButton';
 import List from './componentsChild/List';
@@ -15,30 +16,7 @@ import {Back, Calculator} from 'assets/SVG';
 import {sizes} from 'styles/sizes';
 import getStyleObj from './style';
 
-const graphsData = [
-  {
-    label: '1W',
-    value: 0,
-  },
-  {
-    label: '1M',
-    value: 1,
-  },
-  {
-    label: '3M',
-    value: 3,
-  },
-  {
-    label: '6M',
-    value: 6,
-  },
-  {
-    label: '1Y',
-    value: 12,
-  },
-];
-
-export const DetailScreen: React.FC = () => {
+const DetailScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const styles = getStyleObj(insets);
   const {params} = useRoute();
@@ -48,6 +26,7 @@ export const DetailScreen: React.FC = () => {
   const currencySymbol = useMemo(() => getSymbolFromCurrency(code), [code]);
   const [graphPoints, setGraphPoints] = useState<GraphPoint[]>([]);
   const [currentPoint, setCurrentPoint] = useState<GraphPoint>();
+  const {t} = useTranslation();
 
   const getPoints = useCallback(
     async (from: Date) => {
@@ -66,6 +45,31 @@ export const DetailScreen: React.FC = () => {
     },
     [code],
   );
+
+  const graphsData = useMemo(() => {
+    return [
+      {
+        label: t('screens.details.1W'),
+        value: 0,
+      },
+      {
+        label: t('screens.details.1M'),
+        value: 1,
+      },
+      {
+        label: t('screens.details.3M'),
+        value: 3,
+      },
+      {
+        label: t('screens.details.6M'),
+        value: 6,
+      },
+      {
+        label: t('screens.details.1Y'),
+        value: 12,
+      },
+    ];
+  }, [t]);
 
   const priceTitle = useCallback(
     (resp?: GraphPoint): void => {
@@ -151,3 +155,5 @@ export const DetailScreen: React.FC = () => {
     </View>
   );
 };
+
+export default DetailScreen;

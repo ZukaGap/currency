@@ -17,6 +17,7 @@ import {Portal} from 'react-native-portalize';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import getSymbolFromCurrency from 'currency-symbol-map';
+import {useTranslation} from 'react-i18next';
 
 import {
   currencyCodesAtom,
@@ -50,6 +51,7 @@ const CalculatorScreen: React.FC = () => {
   const {params} = useRoute();
   const receiveRef = useRef(null);
   const {data} = useRecoilValue(currencyCodesAtom);
+  const {t} = useTranslation();
 
   const [sendCurrency, setSendCurrency] = useRecoilState(sendCurrencyAtom);
   const [receiveCurrency, setReceiveCurrency] =
@@ -178,7 +180,7 @@ const CalculatorScreen: React.FC = () => {
     <SafeAreaView style={styles.safeAreaWrapper}>
       <View style={styles.center}>
         <View style={styles.send}>
-          <Text style={styles.title}>Send</Text>
+          <Text style={styles.title}>{t('screens.calculator.sale')}</Text>
           <View style={styles.inputView}>
             <TouchableWithoutFeedback
               hitSlop={{
@@ -216,7 +218,7 @@ const CalculatorScreen: React.FC = () => {
           </Animated.View>
         </TouchableOpacity>
         <View style={styles.receive}>
-          <Text style={styles.title}>Receive</Text>
+          <Text style={styles.title}>{t('screens.calculator.buy')}</Text>
           <View style={styles.inputView}>
             <TouchableWithoutFeedback
               hitSlop={{
