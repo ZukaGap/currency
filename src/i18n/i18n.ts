@@ -29,6 +29,7 @@ const languageDetector = {
     // } else if (Platform.OS === 'android') {
     //   locale = GetLocale(NativeModules.I18nManager.localeIdentifier);
     // }
+
     if (savedLanguage) {
       locale = savedLanguage;
     }
