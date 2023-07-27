@@ -1,56 +1,45 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {CardStyleInterpolators} from '@react-navigation/stack';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import MainStack from './MainTabStack/MainStack';
+import HomeScreen from 'screens/HomeScreen';
+import ConverterScreen from 'screens/ConverterScreen';
 
-const {Navigator, Screen} = createNativeStackNavigator();
+import {Home, Swap} from 'assets/SVG';
+import {colors} from 'styles/colors';
 
-// const config = {
-//   animation: 'spring',
-//   config: {
-//     stiffness: 1000,
-//     damping: 500,
-//     mass: 3,
-//     overshootClamping: true,
-//     restDisplacementThreshold: 0.01,
-//     restSpeedThreshold: 0.01,
-//   },
-// };
+const {Navigator, Screen} = createBottomTabNavigator();
 
 const Routes: React.FC = () => {
   return (
     <NavigationContainer>
       <Navigator
-        screenOptions={() => ({
-          gestureEnabled: true,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          headerShown: true,
-          headerTransparent: true,
-          headerBackTitleVisible: false,
-          headerStyle: {
-            // backgroundColor: colors.white,
-          },
-          // headerTintColor: colors.default,
-          headerTitleStyle: {
-            // fontFamily: fonts.MetropolisRegular,
-            fontSize: 16,
-          },
-          headerBackButtonMenuEnabled: false,
-        })}
-        // options={{
-        //   transitionSpec: {
-        //     open: config,
-        //     close: config,
-        //   },
-        // }}
-        initialRouteName={'mainStack'}>
+        screenOptions={{
+          tabBarActiveTintColor: colors.active,
+          tabBarInactiveTintColor: colors.purple02,
+          unmountOnBlur: true,
+          freezeOnBlur: true,
+          tabBarShowLabel: false,
+        }}
+        initialRouteName="homeScreen">
         <Screen
-          name="mainStack"
-          component={MainStack}
+          name="homeScreen"
+          component={HomeScreen}
           options={{
+            //tabBarLabel: 'Home',
+            unmountOnBlur: true,
             headerShown: false,
+            tabBarIcon: ({color, size}) => <Home width={size} fill={color} />,
+          }}
+        />
+        <Screen
+          name="converterScreen"
+          component={ConverterScreen}
+          options={{
+            //tabBarLabel: 'Converter',
+            unmountOnBlur: true,
+            headerShown: false,
+            tabBarIcon: ({color, size}) => <Swap width={size} fill={color} />,
           }}
         />
       </Navigator>

@@ -1,7 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import ConverterScreen from '../../screens/ConverterScreen';
+import ConverterScreen from 'screens/ConverterScreen';
 
 const {Navigator, Screen} = createNativeStackNavigator();
 

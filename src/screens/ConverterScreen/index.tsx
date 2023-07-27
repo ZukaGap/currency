@@ -1,20 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {Pressable, View, Text} from 'react-native';
-
-import {Swap} from 'assets/SVG';
-
+import {Dropdown} from 'react-native-element-dropdown';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
+import {TextInput} from 'react-native-gesture-handler';
 import SafeAreaView from 'react-native-safe-area-view';
 
 import getStyleObj from './style';
-
-//
-
-import {Dropdown} from 'react-native-element-dropdown';
 import {colors} from '../../styles/colors';
-import {TextInput} from 'react-native-gesture-handler';
+import {Swap} from 'assets/SVG';
 
 const data = [
   {label: 'Item 1', value: '1'},
@@ -97,7 +91,6 @@ const ConverterScreen: React.FC = () => {
           }}
         />
       </View>
-      {}
       <View
         style={[
           styles.inputContainer,
@@ -131,7 +124,6 @@ const ConverterScreen: React.FC = () => {
           </Text>
         </Pressable>
       </View>
-      {}
       <View style={styles.convertedComponent}>
         <Text style={{marginBottom: 10, fontSize: 18, color: colors.black}}>
           70 US Dollars =
