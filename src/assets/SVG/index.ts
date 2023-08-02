@@ -19,3 +19,5 @@ export {default as PortalLogo} from './PortalLogo.svg';
 export {default as Fuel} from './Fuel.svg';
 export {default as Filter} from './Filter.svg';
 export {default as Drawer} from './Drawer.svg';
+export {default as RightArrow} from './RightArrow.svg';
+export {default as Logo} from './Logo.svg';

@@ -42,6 +42,14 @@ export default {
         eng: 'English',
         geo: 'ქართული',
       },
+      welcomeTour: {
+        chooseLanguage: 'აირჩიეთ სასურველი ენა',
+        currency: 'ვალუტა',
+        currencyDescription: 'გაიგე ლარის გაცვლითი კურსი',
+        petrol: 'საწვავი',
+        petrolDescription: 'გაიგე საწვავის ფასები საქართველოში',
+        skip: 'გათიშვა',
+      },
     },
   },
 };

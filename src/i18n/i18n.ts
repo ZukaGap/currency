@@ -64,7 +64,7 @@ const initTranslate = () => {
       debug: true,
 
       // cache: {
-      //   enabled: true
+      //   enabled: true,
       // },
       react: {
         useSuspense: false,

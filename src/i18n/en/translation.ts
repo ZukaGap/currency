@@ -42,6 +42,14 @@ export default {
         eng: 'English',
         geo: 'ქართული',
       },
+      welcomeTour: {
+        chooseLanguage: 'Choose language',
+        currency: 'Currency',
+        currencyDescription: 'Find exchange rate of Gel',
+        petrol: 'Fuel',
+        petrolDescription: 'Find out fuel prices in Georgia',
+        skip: 'skip',
+      },
     },
   },
 };

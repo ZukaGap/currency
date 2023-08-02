@@ -33,6 +33,7 @@
     "react-native-chart-kit": "6.12.0",
     "react-native-device-info": "^10.6.0",
     "react-native-fast-image": "^8.6.3",
+    "react-native-flipper": "^0.209.0",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-graph": "^1.0.2",
     "react-native-html-parser": "0.1.0",
@@ -45,7 +46,8 @@
     "react-native-static-safe-area-insets": "^2.2.0",
     "react-native-svg": "13.6.0",
     "react-navigation-collapsible": "^6.3.0",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "rn-flipper-async-storage-advanced": "^1.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
