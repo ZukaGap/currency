@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {CardStyleInterpolators} from '@react-navigation/stack';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SplashScreen from 'react-native-splash-screen';
 
 import HomeScreen from 'screens/HomeScreen';
 import CalculatorScreen from 'screens/CalculatorScreen';
@@ -17,19 +18,20 @@ import {INTRODUCTION_PASSED} from 'constants/storage';
 const {Navigator, Screen} = createNativeStackNavigator();
 
 const Routes: React.FC = () => {
-  const [isPassed, setIsPassed] = useState(true);
+  const [isPassed, setIsPassed] = useState(false);
   const isIntroductonPassed = useCallback(async () => {
-    const resp = await getFromStorage(INTRODUCTION_PASSED);
-    setIsPassed(resp === 'true' ? true : false);
+    try {
+      const resp = await getFromStorage(INTRODUCTION_PASSED);
+      setIsPassed(resp === 'true' ? true : false);
+    } catch (err) {
+    } finally {
+      SplashScreen.hide();
+    }
   }, []);
 
   useEffect(() => {
     isIntroductonPassed();
   }, []);
-
-  useEffect(() => {
-    console.log(isPassed);
-  }, [isPassed]);
 
   return (
     <NavigationContainer>
