@@ -1,11 +1,19 @@
 package com.currency;
 
+import android.os.Bundle; // here
 import com.facebook.react.ReactActivity;
+import org.devio.rn.splashscreen.SplashScreen; // here
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactActivityDelegate;
 
 public class MainActivity extends ReactActivity {
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    SplashScreen.show(this); // here , R.style.SplashScreenTheme
+    super.onCreate(savedInstanceState);
+  }
 
   /**
    * Returns the name of the main component registered from JavaScript. This is

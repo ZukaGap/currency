@@ -181,7 +181,7 @@ const WelcomeTourScreen: React.FC = ({}) => {
 
   return (
     <SafeAreaView style={styles.safeAreaWrapper}>
-      <StatusBar backgroundColor={colors.white} barStyle={'light-content'} />
+      <StatusBar backgroundColor={colors.purple01} barStyle={'light-content'} />
       <View style={styles.logoWrapper}>
         <Logo width={56} height={56} />
         <TouchableOpacity
