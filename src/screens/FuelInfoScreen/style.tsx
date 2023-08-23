@@ -45,6 +45,7 @@ const getStyleObj = (insets: EdgeInsets) => {
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
       marginHorizontal: 24,
       marginBottom: 16,
     },

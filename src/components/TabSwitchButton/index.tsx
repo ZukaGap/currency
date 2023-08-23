@@ -1,4 +1,4 @@
-import React, {memo, useCallback, useRef, useState} from 'react';
+import React, {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {TouchableOpacity, Text, View} from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -18,17 +18,30 @@ export interface ButtonData {
 interface TabSwitchButtonProps {
   tabData: Graph[];
   onChange?: (item: ButtonData, index: number) => void;
+  defaultValue?: number;
 }
 
 const TabSwitchButton = ({
   tabData,
   onChange = () => {},
+  defaultValue,
 }: TabSwitchButtonProps) => {
   const styles = getStyleObj({});
   const [active, setActive] = useState<ButtonData>(tabData?.[0]);
   const [focusSizes, setFocusSizes] = useState({height: 0, width: 0});
   const animatedRangeRef = useRef<number[]>([]);
   const offset = useSharedValue(4);
+
+  useEffect(() => {
+    if (defaultValue !== undefined) {
+      handleOnPress(tabData?.[defaultValue], defaultValue);
+      const rangeGenerate =
+        defaultValue === 0
+          ? 4
+          : animatedRangeRef.current[defaultValue] * defaultValue + 4;
+      offset.value = rangeGenerate;
+    }
+  }, [defaultValue, handleOnPress]);
 
   const handleOnPress = useCallback(
     (data: ButtonData, index: number) => {
@@ -96,4 +109,4 @@ const TabSwitchButton = ({
   );
 };
 
-export default memo(TabSwitchButton);
+export default TabSwitchButton;

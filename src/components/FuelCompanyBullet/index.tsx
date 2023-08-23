@@ -1,8 +1,8 @@
 import React, {useCallback, useMemo} from 'react';
 import {StyleProp, Text, View, ViewStyle} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 import getStyleObj from './style';
-import FastImage from 'react-native-fast-image';
 
 interface PriceListType {
   price: string;
@@ -15,25 +15,6 @@ export interface CompanyFuelBulletType {
   customStyle?: StyleProp<ViewStyle>;
   customTitle?: StyleProp<ViewStyle>;
 }
-
-const fake_data: PriceListType[] = [
-  {
-    price: '2.89',
-    name: 'awdawdw',
-  },
-  {
-    price: '3.89',
-    name: 'umgujm',
-  },
-  {
-    price: '2.45',
-    name: 'efef efefc',
-  },
-  {
-    price: '2.00',
-    name: 'awd wdcaw 85 awdw',
-  },
-];
 
 const FuelCompanyBullet: React.FC<CompanyFuelBulletType> = ({
   company,

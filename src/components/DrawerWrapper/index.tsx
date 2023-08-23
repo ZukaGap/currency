@@ -4,8 +4,16 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
 } from 'react';
-import {BackHandler, Dimensions, StatusBar, Text, View} from 'react-native';
+import {
+  BackHandler,
+  Dimensions,
+  ScrollView,
+  StatusBar,
+  Text,
+  View,
+} from 'react-native';
 import {
   PanGestureHandler,
   PanGestureHandlerGestureEvent,
@@ -26,6 +34,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import {useTranslation} from 'react-i18next';
 
 import {
   DrawerWrapperProps,
@@ -39,16 +48,6 @@ const {width: SCREEN_WIDTH} = Dimensions.get('screen');
 const THRESHOLD = SCREEN_WIDTH / 3;
 
 // stack screens where we want navigate from Drawer
-const TABS = [
-  {
-    key: 'homeScreen',
-    name: 'Currency',
-  },
-  {
-    key: 'fuelInfoScreen',
-    name: 'Fuel',
-  },
-];
 
 const DrawerWrapper: ForwardRefRenderFunction<
   DrawerWrapperRefProps,
@@ -59,12 +58,29 @@ const DrawerWrapper: ForwardRefRenderFunction<
   const insets = useSafeAreaInsets();
   const route = useRoute();
   const {replace} = useNavigation();
+  const {t} = useTranslation();
   const animatedProps = useAnimatedProps(() => {
     const pointerEvents = translateX.value === 0 ? 'auto' : 'none';
     return {
       pointerEvents,
     };
   }, [translateX.value]);
+  const TABS = useMemo(() => {
+    return [
+      {
+        key: 'homeScreen',
+        name: t('screens.currency.name'),
+      },
+      {
+        key: 'fuelInfoScreen',
+        name: t('screens.fuel.name'),
+      },
+      {
+        key: 'settingsScreen',
+        name: t('screens.settings.name'),
+      },
+    ];
+  }, [t]);
 
   const panGestureEvent = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -195,7 +211,7 @@ const DrawerWrapper: ForwardRefRenderFunction<
       <Animated.View style={[styles.drawerWrapper, menuStyle]}>
         <Text style={styles.name}>M-Economizer</Text>
         <View style={styles.drawerContent}>
-          <View style={styles.screensWrapper}>
+          <ScrollView style={styles.screensWrapper}>
             {TABS?.map(item => (
               <TouchableOpacity
                 disabled={item?.key === route?.name}
@@ -217,7 +233,7 @@ const DrawerWrapper: ForwardRefRenderFunction<
                 </View>
               </TouchableOpacity>
             ))}
-          </View>
+          </ScrollView>
         </View>
       </Animated.View>
       <PanGestureHandler

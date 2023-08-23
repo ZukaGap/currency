@@ -33,7 +33,7 @@ const getStyleObj = ({}) => {
     },
     drawerContent: {
       marginTop: verticalScale(44),
-      width: '40%',
+      width: '45%',
       justifyContent: 'center',
     },
     screensWrapper: {
